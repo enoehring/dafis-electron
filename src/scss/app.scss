@@ -1,0 +1,262 @@
+@import "style";
+@import "~bootstrap/scss/bootstrap";
+@import "~datatables.net-dt/css/jquery.dataTables.min.css";
+@import "~js-treeview/src/treeview.css";
+@import "~dropify/dist/css/dropify.min.css";
+@import "~select2/dist/css/select2.min.css";
+@import '~mdb-ui-kit/css/mdb.min.css';
+
+
+.list-group-item {
+    position: relative;
+    display: block;
+    padding: 0.75rem 1.25rem;
+    border: 1px solid rgba(0, 0, 0, 0.125);
+}
+
+.tree-leaf .tree-leaf-content {
+    padding: 0.75rem 1.25rem;
+    width: 100%;
+}
+
+#tree .tree-leaf:last-child .tree-leaf-content:hover, .tree-leaf .tree-leaf-content:hover{
+    background-color: var(--bs-secondary-bg-subtle) !important;
+}
+
+#tree {
+  top: 120px;
+}
+
+#file-table {
+    width: 100%;
+}
+
+.tree-leaf-text, .menu > li > a {
+  color: var(--bs-emphasis-color);
+}
+
+.tree-leaf-content:has(.tree-expando.hidden) {
+    padding-left: 29px !important;
+}
+
+.tree-folder-icon {
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+#lblCurrentFolder {
+    padding-left: 0 !important;
+}
+
+.folderSelected {
+    background-color: var(--bs-secondary-bg-subtle) !important;
+}
+
+.folderSelected > .tree-leaf-text {
+  color: var(--bs-primary) !important;
+}
+
+.dropify-wrapper, .dropify-preview {
+  background-color: var(--bs-dark-bg-subtle) !important;
+  border: 2px solid var(--bs-secondary-bg-subtle) !important;
+}
+
+.dropify-wrapper {
+    border-radius: 10px;
+}
+
+#categorySelect {
+    width: 100%;
+}
+
+.select2-selection {
+    background-color: var(--bs-modal-bg) !important;
+}
+
+.select2-selection__choice {
+    background-color: var(--bs-secondary-bg-subtle) !important;
+}
+
+ul {
+    list-style: none;
+  }
+
+  .context-menu { 
+    position: absolute; 
+  } 
+  .menu {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--bs-secondary-bg-subtle) !important;;
+    border-radius: 10px;
+    box-shadow: 0 10px 20px rgb(64 64 64 / 5%);
+    padding: 10px 0;
+  }
+  .menu > li > a {
+    padding: 7px 30px 7px 15px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    position: relative;
+    text-decoration: unset;
+    font-weight: 500;
+    border-radius: 5px;
+    transition: 0.5s linear;
+    -webkit-transition: 0.5s linear;
+    -moz-transition: 0.5s linear;
+    -ms-transition: 0.5s linear;
+    -o-transition: 0.5s linear;
+  }
+
+  .menu > li {
+    padding-left: 3px;
+    padding-right: 3px;
+  }
+
+  .menu > li.trash > a:hover {
+    color: red;
+  }
+
+  hr {
+    margin-top: .5rem;
+    margin-bottom: .5rem;
+    border: 0;
+    border-top: 1px solid var(--bs-tertiary-color);
+  }
+
+  .menu > li > a:hover {
+    color: blue;
+    background-color: rgba(var(--bs-tertiary-bg-rgb), .2) !important;
+  }
+
+  .table > :not(caption) > * > * {
+    padding: 0.5rem 0.5rem;
+    color: var(--bs-table-color-state, var(--bs-table-color-type, var(--bs-table-color))) !important;
+  }
+
+  .btn-light {
+    background-color: transparent !important;
+  }
+
+  #managerNavigation {
+    background-color: var(--bs-body-bg);
+  }
+
+  // .btn {
+  //   box-shadow: none;
+  // }
+
+  #filePreviewDialog {
+    background-color: var(--bs-dark-bg-subtle);
+    display: none;
+    height: 85vh;
+    width: 40vw;
+    border-radius: 10px 00px 0px 10px;
+    position: fixed;
+    top: 137px;
+    right: 0;
+}
+
+.dialog {
+  margin-left: 0;
+}
+
+  #nav-tab {
+    padding: .5rem;
+    border-radius: 10px;
+  }
+  .nav-link.active {
+    background-color: #2687e7 !important;
+  }
+
+  .details-row {
+    background-color: var(--bs-body-bg);
+  }
+
+  .btn-group-vertical > button {
+    text-align: start !important;
+    margin-bottom: 2px;
+  }
+
+  .col-form-label {
+    color: var(--bs-body-color);
+  }
+
+  .smallFont {
+    font-size: 14px;
+  }
+
+  #btnClosePreview {
+    font-size: 18px;
+  }
+
+  #file-preview {
+    background-color: var(--bs-body-bg);
+  }
+
+  #btnGroupButtons {
+    box-shadow: none;
+  }
+
+  .uploadLabel {
+    color: #2687e7 !important;
+  }
+
+  .modal-header {
+    border-bottom: 0;
+}
+
+.modal-footer {
+    border-top: 0;
+}
+
+#details-row, #versionsRow, #sharesRow {
+    background-color: var(--bs-dark-bg-subtle) !important;
+    padding: .7rem;
+}
+
+#staticBackdropLabel, #staticBackdropLabelDetails {
+    position: absolute;
+    margin-bottom: 32px;
+}
+
+#upload_file_modal > .modal-dialog {
+  margin-top: 50px;
+}
+
+#file_details_modal > .modal-dialog {
+  margin-top: 50px;
+}
+
+.action_button {
+  position: absolute;
+  margin-bottom: 32px;
+}
+
+#btnDownload {
+right: 55px;
+}
+
+#btnPreview {
+right: 100px;
+}
+
+#btnEdit {
+right: 147px;
+}
+
+#btnDelete {
+right: 192px;
+}
+
+#upload_file_modal > .modal-dialog {
+margin-top: 50px;
+}
+
+caption {
+  padding-top: 0;
+}
+
+// .modal-backdrop.fade.show {
+//   display: none !important;
+// }
