@@ -18,13 +18,35 @@ const createWindow = () => {
     icon: "./src/images/logo.png"
   });
 
-mainWindow.maximize();
+  mainWindow.maximize();
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
+
+  const filter = {
+    urls: ['http://dev.dafis-api.inoclad.corp/*', 'https://localhost:44349/*'] // Remote API URS for which you are getting CORS error
+  }  
+
+  mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
+    filter,
+    (details, callback) => {
+      details.requestHeaders.Origin = `http://dev.dafis-api.inoclad.corp/*`
+      callback({ requestHeaders: details.requestHeaders })
+    }
+  )
+  
+  mainWindow.webContents.session.webRequest.onHeadersReceived(
+    filter,
+    (details, callback) => {
+      details.responseHeaders['access-control-allow-origin'] = [
+        '*'
+      ]
+      callback({ responseHeaders: details.responseHeaders })
+    }
+  )
 };
 
 // This method will be called when Electron has finished

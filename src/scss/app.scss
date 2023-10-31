@@ -260,3 +260,7 @@ caption {
 // .modal-backdrop.fade.show {
 //   display: none !important;
 // }
+
+.tree-leaf .tree-expando {
+  background: var(--bs-body-bg) !important;
+}

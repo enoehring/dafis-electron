@@ -8,7 +8,6 @@ window.$ = window.jQuery = require("jquery");
   require('select2')();
 
 $(".draggable").draggable();
-
 var dropControl = $('.dropify').dropify();
 
 var table = new DataTable('#file-table', {
@@ -16,14 +15,23 @@ var table = new DataTable('#file-table', {
     paging: false,
     bInfo: false,
     responsive: true,
-    data: $.files,
+    // processing: true,
+    // serverSide: true,
+    // data: $.files,
+    ajax: "https://localhost:44349/File/GetAllForElectron",
     order: [1, "desc"],
     columns: [
         { data: 'FileDescriptorId', visible: false},
-        { data: 'FileName', width: "35%" },
+        {targets: 0, data: function ( row, type, val, meta ) {
+          return row["FileName"] + "." + row["Extension"];
+        }},
         { data: 'Notes', width: "35%" },
-        { data: 'CreatedDate', width: "20%" },
-        { data: 'Creator', width: "10%" },
+        {targets: 0, data: function ( row, type, val, meta ) {
+          var date = new Date(row["CreatedDate"]);
+          var FormattedDate = new Intl.DateTimeFormat('de').format(date) + " " + date.getHours() + ":" + date.getMinutes();
+          return FormattedDate;
+        }, width: "15%"},
+        { data: 'Creator', width: "15%" },
     ]
 });
 
@@ -110,15 +118,28 @@ document.onclick = hideMenu;
 
 var currentClickedRowData = [];
 
-$("#file-table tbody tr").on('contextmenu', function(e) {
+$("body").on('contextmenu', "#file-table tbody tr", function(e) {
   // table.row(this).data().id --- ID der aktuellen row
   currentClickedRowData = table.row(this).data();
   rightClick(e);
 });
 
-$("#file-table tbody tr").on('click', function(e) {
+$("body").on('click', '#file-table tbody tr', function(e) {
   var data = table.row(this).data();
   showDetails(data);
+});
+
+$("body").on('dblclick', '#file-table tbody tr', function(e) {
+  var data = table.row(this).data();
+  if(!$('#file_details_modal').hasClass('show')) {
+    $("#lblDetailsFilename").text(data.FileName + "." + data.Extension)
+    $("#inputDetailsDescription").val(data.Notes);
+    $("#inputDetailsDate").val(data.CreatedDate)
+    $("#inputDetailsCreator").val(data.Creator);
+    $("#inputDetailsFilesize").val(data.Filesize);
+    var detailsModal = new Modal(document.getElementById('file_details_modal'));
+    detailsModal.show();
+  }
 });
 
  function hideMenu() { 
@@ -140,7 +161,6 @@ $("#file-table tbody tr").on('click', function(e) {
  } 
 
  function showDetails(data) {
-    console.log(data);
     $("#lblDescription").val(data.Notes);
     $("#lblLastVersion").val(data.VersionNotes);
     $("#lblFileSize").val(data.Filesize);
@@ -161,6 +181,42 @@ $("#file-table tbody tr").on('click', function(e) {
   $("#inputDetailsDate").val(currentClickedRowData.CreatedDate)
   $("#inputDetailsCreator").val(currentClickedRowData.Creator);
   $("#inputDetailsFilesize").val(currentClickedRowData.Filesize);
+ });
+
+ $("#contextBtnCheckout").click(function(e) {
+  var id = currentClickedRowData.FileDescriptorId;
+
+  var url = "https://localhost:44349/File/GetDownload?fileId"+id+"&fileversion=0";
+
+  // fs.copy('/tmp/myfile', '/tmp/mynewfile')
+  // .then(() => console.log('success!'))
+  // .catch(err => console.error(err))
+  // $.ajax({
+  //   url: "https://localhost:44349/File/GetDownload",
+  //   data: {
+  //     fileId: id,
+  //     fileversion: 0,
+  //     returnByte: true
+  //   },
+  //   success: function(data) {
+  //     var bytes = data;
+
+
+  //   },
+  //   error: function(data) {
+  //     console.log("Error");
+  //   }
+  // });
+ });
+
+ $("#contextBtnDownload").click(function(e) {
+  var file_path = "https://localhost:44349/File/GetDownload?fileId=" + id + "&fileversion=0";
+  var a = document.createElement('A');
+  a.href = file_path;
+  document.body.appendChild(a);
+  a.click();
+
+  document.body.removeChild(a);
  });
 
 // $("#abortUpload").click(function(e) {
