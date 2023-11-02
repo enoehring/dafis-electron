@@ -1,0 +1,33 @@
+[
+    {
+        "Edit": "Redigera",
+        "Undo": "Ångra",
+        "Redo": "Gör om",
+        "Cut": "Klipp ut",
+        "Copy": "Kopiera",
+        "Paste": "Klistra in",
+        "Delete": "Radera",
+        "Select all": "Markera allt",
+        "Speech": "Tal",
+        "Start speaking": "Börja tala",
+        "Stop speaking": "Sluta tala",
+        "View": "Visa",
+        "Actual size": "Faktisk storlek",
+        "Zoom in": "Zooma in",
+        "Zoom out": "Zooma ut",
+        "Zoom": "Zooma",
+        "Toggle fullscreen": "Helskärmsläge",
+        "Window": "Fönster",
+        "Minimize": "Minimera",
+        "Close": "Stäng",
+        "Help": "Hjälp",
+        "Learn more": "Läs mer",
+        "About": "Om",
+        "Services": "Tjänster",
+        "Hide" : "Göm",
+        "Hide others": "Göm övriga",
+        "Unhide": "Visa alla",
+        "Quit": "Avsluta",
+        "Bring all to front": "Flytta fram alla"
+       }
+]

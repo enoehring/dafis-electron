@@ -2,10 +2,12 @@ import DataTable from 'datatables.net-dt';
 import { Modal } from 'bootstrap';
 import * as mdb from 'mdb-ui-kit'; // lib
 import { Input } from 'mdb-ui-kit'; // module
+import * as toastr from 'toastr';
 
 require('dropify');
 window.$ = window.jQuery = require("jquery");
   require('select2')();
+  require('toastr');
 
 $(".draggable").draggable();
 var dropControl = $('.dropify').dropify();
@@ -39,6 +41,13 @@ var TreeView = require('js-treeview');
  
 var tree = new TreeView($.categories, 'tree');
 
+$($.categories).each(function(index, item) {
+  var option = document.createElement("option");
+  option.value = item.CategoryID;
+  option.text = item.name;
+  $("#inputCategory").append(option);
+});
+
 $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
     $('.tree-leaf-text').each(function() {
@@ -48,7 +57,9 @@ $(document).ready(function() {
 
 
       $(".select2").select2({
-        placeholder: "Kategorien"
+        width: "100%",
+        placeholder: "Kategorien",
+        closeOnSelect: false,
       });
 });
 
@@ -69,7 +80,7 @@ document.addEventListener('drop', (event) => {
 
 function setFormFileDetails(uploadedFile) {
     $("#inputFilename").val(uploadedFile.name);
-    var timeStamp = new Date(uploadedFile.lastModified).toLocaleDateString("de-DE") + " " + new Date(uploadedFile.lastModified).toLocaleTimeString("de-DE");
+    var timeStamp = new Date(uploadedFile.lastModified).toLocaleDateString("de-DE", $.dateOptions());
     $("#inputDate").val(timeStamp);
     setNewFile(uploadedFile.path);
 
@@ -134,7 +145,7 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   if(!$('#file_details_modal').hasClass('show')) {
     $("#lblDetailsFilename").text(data.FileName + "." + data.Extension)
     $("#inputDetailsDescription").val(data.Notes);
-    $("#inputDetailsDate").val(data.CreatedDate)
+    $("#inputDetailsDate").val(new Date(data.CreatedDate).toLocaleDateString("de-DE", $.dateOptions()))
     $("#inputDetailsCreator").val(data.Creator);
     $("#inputDetailsFilesize").val(data.Filesize);
     var detailsModal = new Modal(document.getElementById('file_details_modal'));
@@ -178,38 +189,40 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  $("#contextBtnProperties").click(function(e) {
   $("#lblDetailsFilename").text(currentClickedRowData.FileName + "." + currentClickedRowData.Extension)
   $("#inputDetailsDescription").val(currentClickedRowData.Notes);
-  $("#inputDetailsDate").val(currentClickedRowData.CreatedDate)
+  $("#inputDetailsDate").val(new Date(currentClickedRowData.CreatedDate).toLocaleDateString("de-DE", $.dateOptions()));
   $("#inputDetailsCreator").val(currentClickedRowData.Creator);
   $("#inputDetailsFilesize").val(currentClickedRowData.Filesize);
  });
 
  $("#contextBtnCheckout").click(function(e) {
   var id = currentClickedRowData.FileDescriptorId;
+  
+  $.blockUI();
 
-  var url = "https://localhost:44349/File/GetDownload?fileId"+id+"&fileversion=0";
+  $.ajax({
+    url: "https://localhost:44349/File/GetDownload",
+    data: {
+      fileId: id,
+      fileversion: 0,
+      returnByte: true
+    },
+    success: function(data) {
+      $.successToastr();
 
-  // fs.copy('/tmp/myfile', '/tmp/mynewfile')
-  // .then(() => console.log('success!'))
-  // .catch(err => console.error(err))
-  // $.ajax({
-  //   url: "https://localhost:44349/File/GetDownload",
-  //   data: {
-  //     fileId: id,
-  //     fileversion: 0,
-  //     returnByte: true
-  //   },
-  //   success: function(data) {
-  //     var bytes = data;
+      var bytes = data;
 
+      $.unblockUI();
 
-  //   },
-  //   error: function(data) {
-  //     console.log("Error");
-  //   }
-  // });
+    },
+    error: function(data) {
+      console.log("Error");
+    }
+  });
  });
 
  $("#contextBtnDownload").click(function(e) {
+  var id = currentClickedRowData.FileDescriptorId;
+  $.blockUI();
   var file_path = "https://localhost:44349/File/GetDownload?fileId=" + id + "&fileversion=0";
   var a = document.createElement('A');
   a.href = file_path;
@@ -217,12 +230,10 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   a.click();
 
   document.body.removeChild(a);
+  $.unblockUI();
  });
 
-// $("#abortUpload").click(function(e) {
-//   hideBackdrop();
-// });
-
-//  function hideBackdrop() {
-//   $(".modal-backdrop.fade.show").css("display", "none");
-//  }
+ $("#contextBtnMoveTo").click(function(e) {
+  
+  const filePath = path.join(app.getPath('userData'), '/some.file')
+ });

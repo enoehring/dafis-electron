@@ -74,7 +74,7 @@
               <thead class="thead">
                   <tr>
                       <th>#</th>
-                      <th scope="col">Filename</th>
+                      <th scope="col" id="tblHeaderFilename">Filename</th>
                       <th scope="col">Description</th>
                       <th scope="col">Creation Date</th>
                       <th class="d-hidden d-md" scope="col">Creator</th>
@@ -110,7 +110,11 @@
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text col-sm-3" id="lblDescCategory">Kategorien</span>
-                  <input type="text" id="inputCategory" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCategory" />
+                <div class="col-sm-9" aria-describedby="lblDescCategory">
+                  <select class="form-control select2" id="inputCategory" multiple>
+                    
+                  </select>
+                </div>
               </div>
               <div class="input-group mb-3">
                 <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
@@ -423,6 +427,12 @@
         <li class="trash"><a href="#" id="contextBtnDelete"><i class="fa fa-trash pe-1" aria-hidden="true"></i> Delete</a></li> 
     </ul> 
 </div> 
+
+<div id="overlay">
+  <div class="cv-spinner">
+    <span class="spinner"></span>
+  </div>
+</div>
 
   </body>
 </html>

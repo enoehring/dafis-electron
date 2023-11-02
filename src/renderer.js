@@ -30,9 +30,9 @@ console.log('👋 This message is being logged by "renderer.js", included via we
 
 import './scss/app.scss'; // just change this line here.
 import 'bootstrap';
-import './scss/app.scss';
 import "@fortawesome/fontawesome-free/js/all";
 import '../assets/jquery-ui.min.js';
-import '../node_modules/moment/dist/moment.js'
+import '../node_modules/moment/dist/moment.js';
+import './js/helper.js';
 import './js/data.js';
 import './js/index.js';
