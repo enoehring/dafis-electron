@@ -1,4 +1,8 @@
-function uploadFile() {
+$("#btnUploadFile").click(function(e) {
+    upload_file_to_Api();
+});
+
+function upload_file_to_Api() {
     var article = document.querySelector('#lblCurrentFolder');
     var crDate;
     var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
