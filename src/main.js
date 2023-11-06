@@ -1,5 +1,5 @@
 const { main } = require('@popperjs/core');
-const { app, BrowserWindow, autoUpdater, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, autoUpdater, ipcRenderer, ipcMain, dialog } = require("electron");
 const path = require('path');
 const url = require("url");
 
@@ -17,8 +17,10 @@ const createWindow = () => {
   mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
+    nodeIntegration: true,
+    contextIsolation: false,
     webPreferences: {
-      preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
+      preload: path.join(__dirname, "/../../src/preload.js"),
     },
     icon: "./src/images/logo.png"
   });
@@ -31,18 +33,16 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  // Load the login page by default.
-  mainWindow.loadFile("dist/login.html");
 
   ipcMain.on("unauthenticated", (event) => {
     resetValidatedLicenses()
 
-    mainWindow.loadFile("dist/login.html");
+    mainWindow.loadFile("src/login.html");
   })
 
   // Load our app when user is authenticated.
   ipcMain.on("authenticated", async event => {
-    mainWindow.loadFile("index.html");
+    mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
     // if (env.NODE_ENV === 'development') {
     //   return // Skip updates on development env
@@ -115,6 +115,10 @@ const createWindow = () => {
       callback({ responseHeaders: details.responseHeaders })
     }
   )
+
+
+  // Load the login page by default.
+  mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
 };
 
 // This method will be called when Electron has finished

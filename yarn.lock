@@ -2529,6 +2529,11 @@ cross-zip@^4.0.0:
   resolved "https://registry.npmjs.org/cross-zip/-/cross-zip-4.0.0.tgz"
   integrity sha512-MEzGfZo0rqE10O/B+AEcCSJLZsrWuRUvmqJTqHNqBtALhaJc3E3ixLGLJNTRzEA2K34wbmOHC4fwYs9sVsdcCA==
 
+crypto-js@^4.2.0:
+  version "4.2.0"
+  resolved "https://registry.npmjs.org/crypto-js/-/crypto-js-4.2.0.tgz"
+  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
+
 css-loader@^6.8.1:
   version "6.8.1"
   resolved "https://registry.npmjs.org/css-loader/-/css-loader-6.8.1.tgz"
@@ -2857,10 +2862,10 @@ electron-winstaller@^5.0.0:
     lodash.template "^4.2.2"
     temp "^0.9.0"
 
-"electron@>= 13.0.0", electron@27.0.0:
-  version "27.0.0"
-  resolved "https://registry.npmjs.org/electron/-/electron-27.0.0.tgz"
-  integrity sha512-mr3Zoy82l8XKK/TgguE5FeNeHZ9KHXIGIpUMjbjZWIREfAv+X2Q3vdX6RG0Pmi1K23AFAxANXQezIHBA2Eypwg==
+electron@^27.0.3, "electron@>= 13.0.0":
+  version "27.0.3"
+  resolved "https://registry.npmjs.org/electron/-/electron-27.0.3.tgz"
+  integrity sha512-VaB9cI1se+mUtz366NP+zxFVnkHLbCBNO4wwouw3FuGyX/m7/Bv1I89JhWOBv78tC+n11ZYMrVD23Jf6EZgVcg==
   dependencies:
     "@electron/get" "^2.0.0"
     "@types/node" "^18.11.18"

@@ -7,7 +7,9 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <script src="login.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>    
+<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     <style>
 .form-container{
     background: linear-gradient(#E9374C,#D31128);
@@ -151,17 +153,17 @@
                             <i class="fa fa-user-circle"></i>
                             <span class="signup"><a href="">Don't have account? Signup</a></span>
                         </div>
-                        <form class="form-horizontal">
+                        <form class="form-horizontal" id="login">
                             <h3 class="title">DAFIS Login</h3>
                             <div class="form-group">
                                 <span class="input-icon"><i class="fa fa-envelope"></i></span>
-                                <input class="form-control" type="text" placeholder="Username">
+                                <input class="form-control" type="text" id="username" placeholder="Username">
                             </div>
                             <div class="form-group">
                                 <span class="input-icon"><i class="fa fa-lock"></i></span>
-                                <input class="form-control" type="password" placeholder="Password">
+                                <input class="form-control" type="password" id="password" placeholder="Password">
                             </div>
-                            <button class="btn signin" id="login">Login</button>
+                            <button class="btn signin" id="test">Login</button>
                             <span class="forgot-pass"><a href="#">Forgot Username/Password?</a></span>
                         </form>
                     </div>
@@ -171,3 +173,93 @@
     </div>
   </body>
 </html>
+<script>
+
+    // const session = window.sess.get_Session()
+    //   if (session != null) {
+    //     ipcRenderer.send("authenticated")
+    //   } 
+
+
+    // const { getSession, createSession } = require("./keygen")
+    const login = document.getElementById("login");
+
+    login.addEventListener("submit", async (event) => {
+    event.preventDefault()
+
+        var pw = $("#password").val();
+        // var encryptedPw = encrypt(pw);
+
+        $.ajax({
+            url: "https://localhost:44349/DafisUser/Login",
+            type: "POST",
+            data: {
+                username: $("#username").val(),
+                password: pw
+            },
+            headers: {
+                "company": "Inoso GmbH",
+            },
+            success: function(data) {
+                if(data.success) {
+                    successToastr();
+                    // window.api.create_Session($("#username").val(), pw);
+                    window.api.loadscript('electron');
+                }
+                else {
+                    errorToastr("Password oder Nutzername falsch");
+                }
+            },
+            error: function(data) {
+                console.log(data);
+            }
+        });
+    });
+
+
+    function errorToastr(text) {
+        toastr.error(text, {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        });
+  }
+
+  function successToastr() {
+        toastr.success('Anmeldung erfolgreich!', {
+        "closeButton": false,
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "preventDuplicates": false,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "5000",
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+        });
+    }
+
+    function encrypt(text) {
+        var pw = "Test";
+         var encrypted = CryptoJS.AES.encrypt(text,pw);
+         return encrypted;
+      }
+</script>
