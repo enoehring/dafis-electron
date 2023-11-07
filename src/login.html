@@ -10,13 +10,15 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js" integrity="sha256-/H4YS+7aYb9kJ5OKhFYPUjSJdrtV6AeyJOtTkw6X72o=" crossorigin="anonymous"></script>    
 <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+<script src="js/framework/particles.min.js"></script>
     <style>
 .form-container{
-    background: linear-gradient(#E9374C,#D31128);
+    background: rgb(131,58,180);
+background: linear-gradient(165deg, rgba(131,58,180,1) 0%, rgba(253,29,29,1) 50%, rgba(252,176,69,1) 100%);
     font-family: 'Roboto', sans-serif;
     font-size: 0;
     padding: 0 15px;
-    border: 1px solid #DC2036;
+    /* border: 1px solid #DC2036; */
     border-radius: 15px;
     box-shadow: 0 0 20px rgba(0,0,0,0.2);
 }
@@ -26,7 +28,6 @@
     text-align: center;
     text-shadow: 0 0 20px rgba(0,0,0,0.2);
     width: 50%;
-    padding: 70px 0;
     vertical-align: top;
     display: inline-block;
 }
@@ -141,44 +142,71 @@
         margin: 0;
     }
 }
+
+body {
+  margin: 0;
+  font:normal 75% Arial, Helvetica, sans-serif;
+}
+
+canvas {
+  display: block;
+  vertical-align: bottom;
+}
+
+#particles-js {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background-image: url("");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 50% 50%;
+}
+
+#wrapper-form {
+    top: 30%;
+    left: 35%;
+    position: absolute;
+    z-index: 1;
+}
+
     </style>
   </head>
   <body>
-    <div class="form-bg">
-        <div class="container">
-            <div class="row" style="justify-content: center; margin-top: 20vh;">
-                <div class="col-lg-offset-3 col-lg-6 col-md-offset-2 col-md-8">
-                    <div class="form-container">
-                        <div class="form-icon">
-                            <i class="fa fa-user-circle"></i>
-                            <span class="signup"><a href="">Don't have account? Signup</a></span>
-                        </div>
-                        <form class="form-horizontal" id="login">
-                            <h3 class="title">DAFIS Login</h3>
-                            <div class="form-group">
-                                <span class="input-icon"><i class="fa fa-envelope"></i></span>
-                                <input class="form-control" type="text" id="username" placeholder="Username">
-                            </div>
-                            <div class="form-group">
-                                <span class="input-icon"><i class="fa fa-lock"></i></span>
-                                <input class="form-control" type="password" id="password" placeholder="Password">
-                            </div>
-                            <button class="btn signin" id="test">Login</button>
-                            <span class="forgot-pass"><a href="#">Forgot Username/Password?</a></span>
-                        </form>
-                    </div>
+    <div class="col-lg-offset-3 col-lg-4 col-md-offset-2 col-md-6" id="wrapper-form">
+        <div class="form-container">
+            <div class="form-icon">
+                <!-- <i class="fa fa-user-circle"></i> -->
+                <div style="height: 143px; width: 100%;margin-top: 40px;margin-bottom: 20px;">
+                    <img src="images/logo.png" style="height: 143px;"> 
                 </div>
+                <span class="signup"><a href="">Don't have account? Signup</a></span>
             </div>
+            <form class="form-horizontal" id="login">
+                <h3 class="title">DAFIS Login</h3>
+                <div class="form-group">
+                    <span class="input-icon"><i class="fa fa-envelope"></i></span>
+                    <input class="form-control" type="text" id="username" placeholder="Username">
+                </div>
+                <div class="form-group">
+                    <span class="input-icon"><i class="fa fa-lock"></i></span>
+                    <input class="form-control" type="password" id="password" placeholder="Password">
+                </div>
+                <button class="btn signin" id="test">Login</button>
+                <span class="forgot-pass"><a href="#">Forgot Username/Password?</a></span>
+            </form>
         </div>
     </div>
+    <div id="particles-js"></div>
   </body>
 </html>
 <script>
 
-    // const session = window.sess.get_Session()
-    //   if (session != null) {
-    //     ipcRenderer.send("authenticated")
-    //   } 
+    const session = window.get.session();
+    console.log(session);
+      if (session) {
+        window.api.loadscript('electron');
+      } 
 
 
     // const { getSession, createSession } = require("./keygen")
@@ -187,6 +215,7 @@
     login.addEventListener("submit", async (event) => {
     event.preventDefault()
 
+        var username = $("#username").val();
         var pw = $("#password").val();
         // var encryptedPw = encrypt(pw);
 
@@ -194,7 +223,7 @@
             url: "https://localhost:44349/DafisUser/Login",
             type: "POST",
             data: {
-                username: $("#username").val(),
+                username: username,
                 password: pw
             },
             headers: {
@@ -203,7 +232,9 @@
             success: function(data) {
                 if(data.success) {
                     successToastr();
+                    console.log(data);
                     // window.api.create_Session($("#username").val(), pw);
+                    window.create.session(username, pw);
                     window.api.loadscript('electron');
                 }
                 else {
@@ -257,9 +288,116 @@
         });
     }
 
-    function encrypt(text) {
-        var pw = "Test";
-         var encrypted = CryptoJS.AES.encrypt(text,pw);
-         return encrypted;
+    /* ---- particles.js config ---- */
+
+particlesJS("particles-js", {
+  "particles": {
+    "number": {
+      "value": 80,
+      "density": {
+        "enable": true,
+        "value_area": 800
       }
+    },
+    "color": {
+      "value": "#ffffff"
+    },
+    "shape": {
+      "type": "circle",
+      "stroke": {
+        "width": 0,
+        "color": "#000000"
+      },
+      "polygon": {
+        "nb_sides": 5
+      },
+      "image": {
+        "src": "img/github.svg",
+        "width": 100,
+        "height": 100
+      }
+    },
+    "opacity": {
+      "value": 0.5,
+      "random": false,
+      "anim": {
+        "enable": false,
+        "speed": 1,
+        "opacity_min": 0.1,
+        "sync": false
+      }
+    },
+    "size": {
+      "value": 3,
+      "random": true,
+      "anim": {
+        "enable": false,
+        "speed": 40,
+        "size_min": 0.1,
+        "sync": false
+      }
+    },
+    "line_linked": {
+      "enable": true,
+      "distance": 150,
+      "color": "#ffffff",
+      "opacity": 0.4,
+      "width": 1
+    },
+    "move": {
+      "enable": true,
+      "speed": 6,
+      "direction": "none",
+      "random": false,
+      "straight": false,
+      "out_mode": "out",
+      "bounce": false,
+      "attract": {
+        "enable": false,
+        "rotateX": 600,
+        "rotateY": 1200
+      }
+    }
+  },
+  "interactivity": {
+    "detect_on": "canvas",
+    "events": {
+      "onhover": {
+        "enable": true,
+        "mode": "repulse"
+      },
+      "onclick": {
+        "enable": true,
+        "mode": "push"
+      },
+      "resize": true
+    },
+    "modes": {
+      "grab": {
+        "distance": 400,
+        "line_linked": {
+          "opacity": 1
+        }
+      },
+      "bubble": {
+        "distance": 400,
+        "size": 40,
+        "duration": 2,
+        "opacity": 8,
+        "speed": 3
+      },
+      "repulse": {
+        "distance": 200,
+        "duration": 0.4
+      },
+      "push": {
+        "particles_nb": 4
+      },
+      "remove": {
+        "particles_nb": 2
+      }
+    }
+  },
+  "retina_detect": true
+});
 </script>
