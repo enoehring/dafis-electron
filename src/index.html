@@ -4,7 +4,6 @@
   <head>
     <meta charset="UTF-8" />
     <title>Dafis Electron</title>
-    <link rel="stylesheet" href="scss/app.scss">
   </head>
   <body>
     <div id="fileManager">
@@ -72,13 +71,14 @@
           </div>
           <div id="fileBrowser" class="col-lg-9 col-md-8 col-sm-12 ">
             <table class="table table-striped table-hover text-wrap file-table dt-table" id="file-table" style="width: 100%;">
-              <thead class="thead">
+              <thead class="thead sticky-top" style="top: 111px;">
                   <tr>
                       <th>#</th>
-                      <th scope="col" id="tblHeaderFilename">Filename</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Creation Date</th>
-                      <th class="d-hidden d-md" scope="col">Creator</th>
+                      <th id="tblHeaderFilename">Filename</th>
+                      <th>Description</th>
+                      <th>Creation Date</th>
+                      <th>Creator</th>
+                      <th>CategoryId</th>
                   </tr>
               </thead>
               <tbody>

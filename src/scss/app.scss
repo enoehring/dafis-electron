@@ -6,6 +6,9 @@
 @import "~select2/dist/css/select2.min.css";
 @import '~mdb-ui-kit/css/mdb.min.css';
 @import "toastr";
+@import "../js/framework/datatables-keyTable/keyTable.dataTables.min.css";
+@import "../js/framework/datatables-scroller/scroller.dataTables.min.css";
+@import "../js/framework/datatables-colreorder/colReorder.dataTables.min.css";
 
 
 .list-group-item {
@@ -308,4 +311,12 @@ caption {
 
 .select2-container.select2-container--default.select2-container--open {
   z-index: 999999;
+}
+
+.selected {
+  background-color: rgba(var(--bs-primary-rgb), var(--bs-bg-opacity)) !important;
+}
+
+#file-table tbody tr {
+  cursor: pointer;
 }

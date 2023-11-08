@@ -53,3 +53,23 @@ $.successToastr = function() {
    $.dateOptions = function() {
     return { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
    }
+
+  $.setCookie = function(name, value) {
+    document.cookie = name+"="+value;
+  }
+
+$.getCookie = function(name) {
+    var cookieName = name + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(cookieName) == 0) {
+            return c.substring(cookieName.length, c.length);
+        }
+    }
+    return "";
+}

@@ -13,33 +13,57 @@ $(".draggable").draggable();
 var dropControl = $('.dropify').dropify();
 
 var table = new DataTable('#file-table', {
-    searching: false,
     paging: false,
     bInfo: false,
     responsive: true,
+    keys: true,
     // processing: true,
     // serverSide: true,
     // data: $.files,
-    ajax: "https://localhost:44349/File/GetAllForElectron",
-    order: [1, "desc"],
+    ajax: "http://dev.dafis-api.inoclad.corp/File/GetAllForElectron",
+    order: [[1, 'desc']],
     columns: [
         { data: 'FileDescriptorId', visible: false},
-        {targets: 0, data: function ( row, type, val, meta ) {
+        {data: function ( row, type, val, meta ) {
           return row["FileName"] + "." + row["Extension"];
         }},
         { data: 'Notes', width: "35%" },
-        {targets: 0, data: function ( row, type, val, meta ) {
+        { data: function ( row, type, val, meta ) {
           var date = new Date(row["CreatedDate"]);
           var FormattedDate = new Intl.DateTimeFormat('de').format(date) + " " + date.getHours() + ":" + date.getMinutes();
           return FormattedDate;
         }, width: "15%"},
         { data: 'Creator', width: "15%" },
-    ]
+        {data: 'CategoryId', visible: false},
+    ],
+    initComplete: function( settings, json ) {
+      // JSON IN COOKIE ABLEGEN
+    }
 });
+
+new $.fn.dataTable.ColReorder( table, {
+  // options
+} );
 
 var TreeView = require('js-treeview');
  
+// $.ajax({
+//   url: "https://localhost:44349/Category/GetAllForElectron",
+//   success: function(data) {
+//     var tree = new TreeView(data, 'tree');
+//   },
+//   error: function(data) {
+
+//   }
+// })
+
 var tree = new TreeView($.categories, 'tree');
+
+$(".tree-leaf-content").click(function(e) {
+  console.log($(this).data("item").CategoryID);
+  var search = "^" + $(this).data("item").CategoryID + "$";
+  table.column(5).search(search, true, false, true).draw();
+});
 
 $($.categories).each(function(index, item) {
   var option = document.createElement("option");
@@ -129,6 +153,37 @@ document.onclick = hideMenu;
 
 var currentClickedRowData = [];
 
+$("#file-table").on('key-focus', function (e, datatable, cell) {
+var company = $.getCookie("Company");
+console.log(document.cookie);
+
+  var row = $(datatable.row(cell[0][0].row).node());
+  $("#file-table tbody tr").removeClass("selected");
+  row.toggleClass('selected');
+  var data = table.row(row).data();
+
+  $.ajax({
+    url: 'http://dev.dafis-api.inoclad.corp/File/GetFilePreview',
+    data: { fileDescriptorId: data.FileDescriptorId },
+    type: "POST",
+    success: function (result) {
+
+      if(result.success){
+        var infos = JSON.parse(result.result);
+        $("#file-preview").html("");
+        $("#file-preview").append(infos.fileLocation);
+        showDetails(data);
+      }
+      else {
+        $.errorToastr("Error while previewing the File!");
+      }
+    },
+    error: function(result) {
+      $.errorToastr("Error while previewing the File!");
+    }
+});
+});
+
 $("body").on('contextmenu', "#file-table tbody tr", function(e) {
   // table.row(this).data().id --- ID der aktuellen row
   currentClickedRowData = table.row(this).data();
@@ -136,8 +191,30 @@ $("body").on('contextmenu', "#file-table tbody tr", function(e) {
 });
 
 $("body").on('click', '#file-table tbody tr', function(e) {
-  var data = table.row(this).data();
-  showDetails(data);
+//   $("#file-table tbody tr").removeClass("selected");
+//   $(this).toggleClass('selected');
+//   var data = table.row(this).data();
+
+//   $.ajax({
+//     url: 'https://localhost:44349/File/GetFilePreview',
+//     data: { fileDescriptorId: data.FileDescriptorId },
+//     type: "POST",
+//     success: function (result) {
+
+//       if(result.success){
+//         var infos = JSON.parse(result.result);
+//         $("#file-preview").html("");
+//         $("#file-preview").append(infos.fileLocation);
+//         showDetails(data);
+//       }
+//       else {
+//         $.errorToastr("Error while previewing the File!");
+//       }
+//     },
+//     error: function(result) {
+//       $.errorToastr("Error while previewing the File!");
+//     }
+// });
 });
 
 $("body").on('dblclick', '#file-table tbody tr', function(e) {
@@ -200,7 +277,7 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   $.blockUI();
 
   $.ajax({
-    url: "https://localhost:44349/File/GetDownload",
+    url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
     data: {
       fileId: id,
       fileversion: 0,
@@ -223,9 +300,11 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  $("#contextBtnDownload").click(function(e) {
   var id = currentClickedRowData.FileDescriptorId;
   $.blockUI();
-  var file_path = "https://localhost:44349/File/GetDownload?fileId=" + id + "&fileversion=0";
+  var file_path = "http://dev.dafis-api.inoclad.corp/File/GetDownload?fileId=" + id + "&fileversion=0";
   var a = document.createElement('A');
   a.href = file_path;
+  a.value = currentClickedRowData.FileName;
+  a.setAttribute("data-title", currentClickedRowData.FileName);
   document.body.appendChild(a);
   a.click();
 
