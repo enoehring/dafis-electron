@@ -1,5 +1,6 @@
 const { main } = require('@popperjs/core');
-const { app, BrowserWindow, autoUpdater, ipcRenderer, ipcMain, dialog } = require("electron");
+const { app, BrowserWindow, autoUpdater, ipcMain, dialog, session } = require("electron");
+const { event } = require('jquery');
 const path = require('path');
 const url = require("url");
 
@@ -33,6 +34,15 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+  ipcMain.on("getCookies", (event) => {
+    return session.defaultSession.cookies.get({});
+  });
+
+  ipcMain.on("setCookie", (name, value) => {
+    var cookie = { "name": "value" };
+    console.log("works");
+    session.defaultSession.cookies.set(cookie)
+  });
 
   ipcMain.on("unauthenticated", (event) => {
     resetValidatedLicenses()

@@ -316,3 +316,9 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   
   const filePath = path.join(app.getPath('userData'), '/some.file')
  });
+
+ $("#btnHome").click(function(e) {
+  table.column(5).search("", true, false, true).draw();
+  $(".tree-leaf-content").removeClass("folderSelected");
+  tree.collapseAll();
+ });

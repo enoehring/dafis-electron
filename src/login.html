@@ -202,7 +202,7 @@ canvas {
 </html>
 <script>
 
-    const session = window.get.session();
+    const session = window.get.session()
     console.log(session);
       if (session) {
         window.api.loadscript('electron');
@@ -229,13 +229,13 @@ canvas {
             headers: {
                 "company": "Inoso GmbH",
             },
-            success: function(data) {
-                if(data.success) {
+            success: function(result) {
+                if(result.success) {
                     successToastr();
-                    console.log(data);
-                    // window.api.create_Session($("#username").val(), pw);
-                    window.create.session(username, pw);
-                    window.api.loadscript('electron');
+                    var data = result.result;
+                  // window.create.session(data.fingerprint, data.dafisUserID, data.company);
+                  // console.log(window.get.session());
+                  window.api.loadscript('electron');
                 }
                 else {
                     errorToastr("Password oder Nutzername falsch");
@@ -246,6 +246,26 @@ canvas {
             }
         });
     });
+
+    function setCookie(name, value) {
+    document.cookie = name+"="+value;
+}
+
+function getCookie(name) {
+    var cookieName = name + "=";
+    var decodedCookie = decodeURIComponent(document.cookie);
+    var ca = decodedCookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i];
+        while (c.charAt(0) == ' ') {
+            c = c.substring(1);
+        }
+        if (c.indexOf(cookieName) == 0) {
+            return c.substring(cookieName.length, c.length);
+        }
+    }
+    return "";
+}
 
 
     function errorToastr(text) {
@@ -332,7 +352,7 @@ particlesJS("particles-js", {
       "random": true,
       "anim": {
         "enable": false,
-        "speed": 40,
+        "speed": 30,
         "size_min": 0.1,
         "sync": false
       }

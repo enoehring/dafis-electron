@@ -31,17 +31,19 @@ contextBridge.exposeInMainWorld(
 );
 
 function createSession(fingerprint, userid, company) {
-    setCookie("SessionToken", fingerprint);
-    setCookie("UserId", userid);
-    setCookie("Company", company);
+//     var cookie = { SessionToken: fingerprint, UserId: userid, Company: company };
+//     session.defaultSession.cookies.set(cookie)
+//   .then(() => {
+//     return;
+//   }, (error) => {
+//     console.error(error)
+//   })
+
+ipcRenderer.send("setCookie")
 }
 
 function getSession() {
-    if(getCookie("SessionToken") && getCookie("UserId") && getCookie("Company")) {
-        return true;
-    }
-
-    return false;
+    return ipcRenderer.send("getCookies");
 }
 
 function setCookie(name, value) {

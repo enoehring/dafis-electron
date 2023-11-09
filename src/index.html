@@ -9,7 +9,7 @@
     <div id="fileManager">
       <div id="managerNavigation" class="sticky-top">
           <div class="row bg-secondary-subtle pb-3 pt-3 rounded">
-                  <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;">
+                  <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;" id="btnHome">
                     <i class="fas fa-home fa-lg" data-placement="top" data-trigger="hover" data-toggle="popover" data-content="Reset"></i>
                   </div>
                   <span id="lblCurrentFolder" class="col-md-10 col-sm-9" data-currentFolderId="0">
@@ -95,6 +95,8 @@
     <div class="modal-content">
       <div class="modal-header pb-0">
         <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabel"><i class="fa-solid fa-cloud-arrow-up"></i> Neues Dokument hinzufügen</button>
+        <button type="button" id="btnPostpone" class="btn btn-success action_button"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        <button type="button" id="btnReset" class="btn btn-danger action_button"><i class="fa-solid fa-arrow-rotate-left"></i></button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body pb-0 ps-4 pe-4">
@@ -121,9 +123,18 @@
                 <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
                 <input type="text" id="inputDate" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDate" />
               </div>
-              <div class="input-group">
+              <div class="input-group mb-3">
                 <span class="input-group-text col-sm-3" id="lblDescCreator">Ersteller</span>
                 <input type="text" id="inputCreator" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCreator" />
+              </div>
+              <hr>
+              <div class="input-group mb-3 mt-3">
+                <span class="input-group-text col-sm-3" id="lblDescCommission">Kommission</span>
+                <input type="text" id="inputCommission" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCommission" />
+              </div>
+              <div class="input-group">
+                <span class="input-group-text col-sm-3" id="lblDescYear">Jahr</span>
+                <input type="text" id="inputYear" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescYear" />
               </div>
             </form>
           </div>
@@ -150,7 +161,7 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-regular fa-circle-xmark"></i> Abbrechen</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-solid fa-x"></i></button>
         <button type="button" class="btn btn-primary" id="btnUploadFile"><i class="fa-solid fa-floppy-disk"></i> Speichern</button>
       </div>
     </div>
