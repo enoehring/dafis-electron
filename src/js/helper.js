@@ -21,7 +21,7 @@ $.successToastr = function() {
   }
 
   $.errorToastr = function(text) {
-    toastr.error('text', {
+    toastr.error(text, {
       "closeButton": false,
       "debug": false,
       "newestOnTop": true,

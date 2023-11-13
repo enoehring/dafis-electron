@@ -21,6 +21,7 @@ const createWindow = () => {
     nodeIntegration: true,
     contextIsolation: false,
     webPreferences: {
+      webSecurity: false,
       preload: path.join(__dirname, "/../../src/preload.js"),
     },
     icon: "./src/images/logo.png"
@@ -48,7 +49,7 @@ const createWindow = () => {
 
   ipcMain.on("setCookie", (event, data) => {
     sessionData = data
-    // session.defaultSession.cookies.set(data);
+    session.defaultSession.cookies.set(data);
   });
 
   ipcMain.on("unauthenticated", (event) => {
