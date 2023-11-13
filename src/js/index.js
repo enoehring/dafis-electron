@@ -12,6 +12,8 @@ window.$ = window.jQuery = require("jquery");
 $(".draggable").draggable();
 var dropControl = $('.dropify').dropify();
 
+let loginSession;
+
 var table = new DataTable('#file-table', {
     paging: false,
     bInfo: false,
@@ -72,8 +74,17 @@ $($.categories).each(function(index, item) {
   $("#inputCategory").append(option);
 });
 
+$.loginSession = function() {
+    return loginSession;
+};
+
 $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
+
+    (async () => {
+      loginSession = await window.get.session();
+    })();
+
     $('.tree-leaf-text').each(function() {
         $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
         $(this).closest(".tree-leaf-content").addClass("ripple");
@@ -318,6 +329,9 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  });
 
  $("#btnHome").click(function(e) {
+
+  console.log($.loginSession());
+
   table.column(5).search("", true, false, true).draw();
   $(".tree-leaf-content").removeClass("folderSelected");
   tree.collapseAll();

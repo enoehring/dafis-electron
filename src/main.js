@@ -34,14 +34,21 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
-  ipcMain.on("getCookies", (event) => {
-    return session.defaultSession.cookies.get({});
+  var sessionData = {};
+
+  ipcMain.handle("getCookies", async (event) => {
+    // return session.defaultSession.cookies.get({});
+    return sessionData;
+    // session.defaultSession.cookies.get({})  .then((cookies) => {
+    //   console.log(cookies)
+    // }).catch((error) => {
+    //   console.log(error)
+    // });
   });
 
-  ipcMain.on("setCookie", (name, value) => {
-    var cookie = { "name": "value" };
-    console.log("works");
-    session.defaultSession.cookies.set(cookie)
+  ipcMain.on("setCookie", (event, data) => {
+    sessionData = data
+    // session.defaultSession.cookies.set(data);
   });
 
   ipcMain.on("unauthenticated", (event) => {

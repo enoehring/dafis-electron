@@ -201,11 +201,9 @@ canvas {
   </body>
 </html>
 <script>
-
     const session = window.get.session()
-    console.log(session);
       if (session) {
-        window.api.loadscript('electron');
+        //window.api.loadscript('electron');
       } 
 
 
@@ -227,14 +225,13 @@ canvas {
                 password: pw
             },
             headers: {
-                "company": "Inoso GmbH",
+                "company": "Inoclad Engineering",
             },
             success: function(result) {
                 if(result.success) {
                     successToastr();
                     var data = result.result;
-                  // window.create.session(data.fingerprint, data.dafisUserID, data.company);
-                  // console.log(window.get.session());
+                  window.create.session(data.fingerprint, data.dafisUserID, "Inoclad Engineering");
                   window.api.loadscript('electron');
                 }
                 else {

@@ -6,6 +6,11 @@ const contextBridge=electron.contextBridge;
 
 const { ipcRenderer } = require("electron");
 
+var _sessionToken = "";
+var _userId = 0;
+var _company = "";
+
+
 contextBridge.exposeInMainWorld(
     "api", {
         loadscript: (filename) => {
@@ -31,19 +36,17 @@ contextBridge.exposeInMainWorld(
 );
 
 function createSession(fingerprint, userid, company) {
-//     var cookie = { SessionToken: fingerprint, UserId: userid, Company: company };
-//     session.defaultSession.cookies.set(cookie)
-//   .then(() => {
-//     return;
-//   }, (error) => {
-//     console.error(error)
-//   })
+    _sessionToken = fingerprint;
+    _userId = userid;
+    _company = company;
 
-ipcRenderer.send("setCookie")
+    ipcRenderer.send("setCookie", {SessionToken: _sessionToken, UserId: _userId, Company: _company});
 }
 
-function getSession() {
-    return ipcRenderer.send("getCookies");
+async function getSession() {
+    const result = await ipcRenderer.invoke('getCookies');
+    var ret = result // prints "foo"
+    return ret;
 }
 
 function setCookie(name, value) {

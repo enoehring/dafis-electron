@@ -37,6 +37,7 @@ import './js/framework/particles.min.js'
 import './js/framework/datatables-keyTable/dataTables.keyTable.min.js'
 import './js/framework/datatables-colreorder/dataTables.colReorder.min.js'
 import './js/framework/datatables-scroller/dataTables.scroller.min.js'
+import './js/upload.js';
 import './js/helper.js';
 import './js/data.js';
 import './js/index.js';
