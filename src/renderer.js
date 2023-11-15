@@ -33,10 +33,11 @@ import 'bootstrap';
 import "@fortawesome/fontawesome-free/js/all";
 import '../assets/jquery-ui.min.js';
 import '../node_modules/moment/dist/moment.js';
-import './js/framework/particles.min.js'
-import './js/framework/datatables-keyTable/dataTables.keyTable.min.js'
-import './js/framework/datatables-colreorder/dataTables.colReorder.min.js'
-import './js/framework/datatables-scroller/dataTables.scroller.min.js'
+import './js/framework/particles.min.js';
+import './js/framework/datatables-keyTable/dataTables.keyTable.min.js';
+import './js/framework/datatables-colreorder/dataTables.colReorder.min.js';
+import './js/framework/datatables-scroller/dataTables.scroller.min.js';
+import 'leader-line-new';
 import './js/helper.js';
 import './js/data.js';
 import './js/index.js';

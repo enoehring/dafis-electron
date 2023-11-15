@@ -4095,6 +4095,11 @@ launch-editor@^2.6.0:
     picocolors "^1.0.0"
     shell-quote "^1.8.1"
 
+leader-line-new@^1.1.9:
+  version "1.1.9"
+  resolved "https://registry.npmjs.org/leader-line-new/-/leader-line-new-1.1.9.tgz"
+  integrity sha512-x56aRYaqJTA4aAS2fgbSpvWKY3IxRXDSFeGkNBmCQ3LX44B3F1HEjcBTkCiK5I3W0nPWeUTWe7dTt59VtdfFWw==
+
 lines-and-columns@^1.1.6:
   version "1.2.4"
   resolved "https://registry.npmjs.org/lines-and-columns/-/lines-and-columns-1.2.4.tgz"

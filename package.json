@@ -61,6 +61,7 @@
     "jquery": "^3.7.1",
     "jquery-ui": "^1.13.2",
     "js-treeview": "^1.1.5",
+    "leader-line-new": "^1.1.9",
     "mdb-ui-kit": "^6.4.2",
     "moment": "^2.29.4",
     "path": "^0.12.7",

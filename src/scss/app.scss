@@ -170,7 +170,7 @@ ul {
     position: fixed;
     top: 137px;
     right: 0;
-    // z-index: 10000;
+    z-index: 2;
 }
 
 .dialog {
@@ -226,7 +226,7 @@ ul {
     border-top: 0;
 }
 
-#details-row, #versionsRow, #sharesRow {
+#details-row, #versionsRow, #sharesRow, #edit-history {
     background-color: var(--bs-dark-bg-subtle) !important;
     padding: .7rem;
 }
@@ -347,10 +347,64 @@ caption {
   height: auto;
 }
 
-#inputDescription {
+#inputDescription, #inputDetailsCategory, #inputDetailsDescription {
   min-height: 38px;
 }
 
 .sticky-top {
   z-index: 1 !important;
 }
+
+#file-notes .media-body{
+  padding: 5px;
+  background: #ffffe6;
+  border: 1px solid #ced4da;
+  border-radius: .25rem;
+  color: var(--bs-light-bg-subtle);
+  font-size: 12px;
+}
+
+
+#versions .media-body, #edit-history .media{
+  font-size: 14px;
+}
+
+#file-notes li.media{
+  margin-bottom: 5px !important;
+}
+
+.note-text {
+  margin-bottom: 0;
+}
+
+.versionIcon {
+  text-align: center;
+}
+
+.leader-line {
+  z-index: 10000;
+}
+
+#versions .media:hover{
+    background-color: var(--bs-secondary-bg-subtle);
+}
+
+.list-unstyled {
+  margin-bottom: 0;
+}
+
+.icon-wrapper {
+  padding: 12px;
+}
+
+.edit-highlight, .edit-text svg {
+  color: rgba(var(--bs-primary-rgb), 1);
+}
+
+.edit-text {
+  color: var(--bs-secondary-color);
+} 
+
+.edit-text b {
+  color: var(--bs-emphasis-color);
+} 

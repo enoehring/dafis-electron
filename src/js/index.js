@@ -10,6 +10,14 @@ window.$ = window.jQuery = require("jquery");
   require('toastr');
 
 $(".draggable").draggable();
+
+$(".resizable").resizable({
+  handles: "n, e, s, w",
+  helper: "resizable-helper"
+});
+
+let LeaderLine = require("leader-line-new");
+
 var dropControl = $('.dropify').dropify();
 
 let loginSession;
@@ -48,7 +56,7 @@ new $.fn.dataTable.ColReorder( table, {
 } );
 
 var TreeView = require('js-treeview');
- 
+
 // $.ajax({
 //   url: "https://localhost:44349/Category/GetAllForElectron",
 //   success: function(data) {
@@ -422,3 +430,21 @@ function clearUploadForm() {
   $("#upload_file_form").trigger("reset");
   files = [];
 }
+
+// document.getElementById('file_details_modal').addEventListener('shown.bs.modal', () => {
+//   var line1 = new LeaderLine(
+//     document.getElementById('start1'),
+//     document.getElementById('end1'), {
+//       endPlug: 'behind',
+//       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
+//     }
+// );
+
+// var line2 = new LeaderLine(
+//     document.getElementById('end1'),
+//     document.getElementById('end2'), {
+//       endPlug: 'behind',
+//       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
+//     }
+// );
+// })
