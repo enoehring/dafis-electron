@@ -10,36 +10,70 @@ window.$ = window.jQuery = require("jquery");
   require('toastr');
 
 $(".draggable").draggable();
+
+$(".resizable").resizable({
+  handles: "n, e, s, w",
+  helper: "resizable-helper"
+});
+
+let LeaderLine = require("leader-line-new");
+
 var dropControl = $('.dropify').dropify();
 
+let loginSession;
+
 var table = new DataTable('#file-table', {
-    searching: false,
     paging: false,
     bInfo: false,
     responsive: true,
+    keys: true,
     // processing: true,
     // serverSide: true,
     // data: $.files,
-    ajax: "https://localhost:44349/File/GetAllForElectron",
-    order: [1, "desc"],
+    ajax: "http://dev.dafis-api.inoclad.corp/File/GetAllForElectron",
+    order: [[1, 'desc']],
     columns: [
         { data: 'FileDescriptorId', visible: false},
-        {targets: 0, data: function ( row, type, val, meta ) {
+        {data: function ( row, type, val, meta ) {
           return row["FileName"] + "." + row["Extension"];
         }},
         { data: 'Notes', width: "35%" },
-        {targets: 0, data: function ( row, type, val, meta ) {
+        { data: function ( row, type, val, meta ) {
           var date = new Date(row["CreatedDate"]);
           var FormattedDate = new Intl.DateTimeFormat('de').format(date) + " " + date.getHours() + ":" + date.getMinutes();
           return FormattedDate;
         }, width: "15%"},
         { data: 'Creator', width: "15%" },
-    ]
+        {data: 'CategoryId', visible: false},
+    ],
+    initComplete: function( settings, json ) {
+      // JSON IN COOKIE ABLEGEN
+    }
 });
 
+new $.fn.dataTable.ColReorder( table, {
+  // options
+} );
+
 var TreeView = require('js-treeview');
- 
+
+// $.ajax({
+//   url: "https://localhost:44349/Category/GetAllForElectron",
+//   success: function(data) {
+//     var tree = new TreeView(data, 'tree');
+//   },
+//   error: function(data) {
+
+//   }
+// })
+
 var tree = new TreeView($.categories, 'tree');
+
+$(".tree-leaf-content").click(function(e) {
+  console.log($(this).data("item").CategoryID);
+  var search = "^" + $(this).data("item").CategoryID + "$";
+  table.column(5).search(search, true, false, true).draw();
+});
 
 $($.categories).each(function(index, item) {
   var option = document.createElement("option");
@@ -48,8 +82,17 @@ $($.categories).each(function(index, item) {
   $("#inputCategory").append(option);
 });
 
+$.loginSession = function() {
+    return loginSession;
+};
+
 $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
+
+    (async () => {
+      loginSession = await window.get.session();
+    })();
+
     $('.tree-leaf-text').each(function() {
         $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
         $(this).closest(".tree-leaf-content").addClass("ripple");
@@ -58,7 +101,6 @@ $(document).ready(function() {
 
       $(".select2").select2({
         width: "100%",
-        placeholder: "Kategorien",
         closeOnSelect: false,
       });
 });
@@ -69,9 +111,13 @@ $("#tree .tree-leaf-content").not(".tree-expando").click(function(e) {
     $(this).addClass("folderSelected");
 });
 
+var files;
+
 document.addEventListener('drop', (event) => {
   event.preventDefault();
   event.stopPropagation();
+
+  files = event.dataTransfer.files;
 
   for (const f of event.dataTransfer.files) {
       setFormFileDetails(f);
@@ -79,6 +125,7 @@ document.addEventListener('drop', (event) => {
 });
 
 function setFormFileDetails(uploadedFile) {
+
     $("#inputFilename").val(uploadedFile.name);
     var timeStamp = new Date(uploadedFile.lastModified).toLocaleDateString("de-DE", $.dateOptions());
     $("#inputDate").val(timeStamp);
@@ -129,6 +176,37 @@ document.onclick = hideMenu;
 
 var currentClickedRowData = [];
 
+$("#file-table").on('key-focus', function (e, datatable, cell) {
+var company = $.getCookie("Company");
+console.log(document.cookie);
+
+  var row = $(datatable.row(cell[0][0].row).node());
+  $("#file-table tbody tr").removeClass("selected");
+  row.toggleClass('selected');
+  var data = table.row(row).data();
+
+  $.ajax({
+    url: 'http://dev.dafis-api.inoclad.corp/File/GetFilePreview',
+    data: { fileDescriptorId: data.FileDescriptorId },
+    type: "POST",
+    success: function (result) {
+
+      if(result.success){
+        var infos = JSON.parse(result.result);
+        $("#file-preview").html("");
+        $("#file-preview").append(infos.fileLocation);
+        showDetails(data);
+      }
+      else {
+        $.errorToastr("Error while previewing the File!");
+      }
+    },
+    error: function(result) {
+      $.errorToastr("Error while previewing the File!");
+    }
+});
+});
+
 $("body").on('contextmenu', "#file-table tbody tr", function(e) {
   // table.row(this).data().id --- ID der aktuellen row
   currentClickedRowData = table.row(this).data();
@@ -136,8 +214,30 @@ $("body").on('contextmenu', "#file-table tbody tr", function(e) {
 });
 
 $("body").on('click', '#file-table tbody tr', function(e) {
-  var data = table.row(this).data();
-  showDetails(data);
+//   $("#file-table tbody tr").removeClass("selected");
+//   $(this).toggleClass('selected');
+//   var data = table.row(this).data();
+
+//   $.ajax({
+//     url: 'https://localhost:44349/File/GetFilePreview',
+//     data: { fileDescriptorId: data.FileDescriptorId },
+//     type: "POST",
+//     success: function (result) {
+
+//       if(result.success){
+//         var infos = JSON.parse(result.result);
+//         $("#file-preview").html("");
+//         $("#file-preview").append(infos.fileLocation);
+//         showDetails(data);
+//       }
+//       else {
+//         $.errorToastr("Error while previewing the File!");
+//       }
+//     },
+//     error: function(result) {
+//       $.errorToastr("Error while previewing the File!");
+//     }
+// });
 });
 
 $("body").on('dblclick', '#file-table tbody tr', function(e) {
@@ -200,7 +300,7 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   $.blockUI();
 
   $.ajax({
-    url: "https://localhost:44349/File/GetDownload",
+    url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
     data: {
       fileId: id,
       fileversion: 0,
@@ -223,9 +323,11 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  $("#contextBtnDownload").click(function(e) {
   var id = currentClickedRowData.FileDescriptorId;
   $.blockUI();
-  var file_path = "https://localhost:44349/File/GetDownload?fileId=" + id + "&fileversion=0";
+  var file_path = "http://dev.dafis-api.inoclad.corp/File/GetDownload?fileId=" + id + "&fileversion=0";
   var a = document.createElement('A');
   a.href = file_path;
+  a.value = currentClickedRowData.FileName;
+  a.setAttribute("data-title", currentClickedRowData.FileName);
   document.body.appendChild(a);
   a.click();
 
@@ -237,3 +339,112 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   
   const filePath = path.join(app.getPath('userData'), '/some.file')
  });
+
+ $("#btnHome").click(function(e) {
+
+  console.log($.loginSession());
+
+  table.column(5).search("", true, false, true).draw();
+  $(".tree-leaf-content").removeClass("folderSelected");
+  tree.collapseAll();
+ });
+
+
+ $("body").on("click", "#btnUploadFile", function(e) {
+  upload_file_to_Api();
+});
+
+function upload_file_to_Api() {
+  console.log("UPload button click");
+  var article = document.querySelector('#lblCurrentFolder');
+  var crDate;
+  var options = { year: 'numeric', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit' };
+
+  var _categories = [];
+  $("#inputCategory option:selected").each(function () {
+      _categories.push($(this).val());
+  });
+
+  var inputFile = files[0];
+
+  var fileExists = false;
+
+  console.log(inputFile);
+
+  if ($("#inputDate")[0].value != "") {
+      var Description = $("#inputDescription")[0].value;
+
+      var form_data = new FormData();
+
+      form_data.append("File", inputFile);
+      form_data.append("FileName", $("#inputFilename").val());
+      form_data.append("Description", Description);
+      form_data.append("Category", JSON.stringify(_categories));
+      form_data.append("Clients", $.loginSession().Company);
+      form_data.append("ExecutingUserId", $.loginSession().UserId);
+      form_data.append("SessionToken", $.loginSession().SessionToken);
+      form_data.append("Company", $.loginSession().Company);
+      form_data.append("AlreadyExists", fileExists);
+
+      // if (fileExists) {
+      //     form_data.append("FileID", article.dataset.fileId);
+      //     form_data.append("FileName", $("#fileDrop")[0].value);
+      //     form_data.append("OldFileName", article.dataset.filename);
+      // }
+
+      crDate = new Date(inputFile.lastModified);
+      form_data.append("FileCreationDate", crDate.toLocaleDateString('de-DE', options));
+      
+      $.ajax({
+          url: 'https://localhost:44349/File/UploadFile',
+          crossOrigin: true,
+          type: "POST",
+          contentType: false,
+          processData: false,
+          data: form_data,
+          success: function (data) {
+              if (data.success) {
+                  $.successToastr();
+                  clearUploadForm();
+              }
+              else {
+                  $.errorToastr("Fehler beim Hochladen der Datei!");
+              }
+
+              fileExists = false;
+          },
+          error: function (data) {
+              $.errorToastr("Fehler beim Hochladen der Datei!");
+          }
+      });
+
+      fileExists = false;
+  }
+  else {
+
+  }
+}
+
+function clearUploadForm() {
+  $(".dropify-clear").trigger("click");
+  $("#upload_file_form").trigger("reset");
+  files = [];
+}
+
+// document.getElementById('file_details_modal').addEventListener('shown.bs.modal', () => {
+//   var line1 = new LeaderLine(
+//     document.getElementById('start1'),
+//     document.getElementById('end1'), {
+//       endPlug: 'behind',
+//       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
+//     }
+// );
+
+// var line2 = new LeaderLine(
+//     document.getElementById('end1'),
+//     document.getElementById('end2'), {
+//       endPlug: 'behind',
+//       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
+//     }
+// );
+// })

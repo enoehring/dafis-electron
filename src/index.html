@@ -6,10 +6,11 @@
     <title>Dafis Electron</title>
   </head>
   <body>
+    <input hidden id="SessionToken" value="Test">
     <div id="fileManager">
       <div id="managerNavigation" class="sticky-top">
           <div class="row bg-secondary-subtle pb-3 pt-3 rounded">
-                  <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;">
+                  <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;" id="btnHome">
                     <i class="fas fa-home fa-lg" data-placement="top" data-trigger="hover" data-toggle="popover" data-content="Reset"></i>
                   </div>
                   <span id="lblCurrentFolder" class="col-md-10 col-sm-9" data-currentFolderId="0">
@@ -71,13 +72,14 @@
           </div>
           <div id="fileBrowser" class="col-lg-9 col-md-8 col-sm-12 ">
             <table class="table table-striped table-hover text-wrap file-table dt-table" id="file-table" style="width: 100%;">
-              <thead class="thead">
+              <thead class="thead sticky-top" style="top: 111px;">
                   <tr>
                       <th>#</th>
-                      <th scope="col" id="tblHeaderFilename">Filename</th>
-                      <th scope="col">Description</th>
-                      <th scope="col">Creation Date</th>
-                      <th class="d-hidden d-md" scope="col">Creator</th>
+                      <th id="tblHeaderFilename">Filename</th>
+                      <th>Description</th>
+                      <th>Creation Date</th>
+                      <th>Creator</th>
+                      <th>CategoryId</th>
                   </tr>
               </thead>
               <tbody>
@@ -94,6 +96,8 @@
     <div class="modal-content">
       <div class="modal-header pb-0">
         <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabel"><i class="fa-solid fa-cloud-arrow-up"></i> Neues Dokument hinzufügen</button>
+        <button type="button" id="btnPostpone" class="btn btn-success action_button"><i class="fa-solid fa-arrow-right-from-bracket"></i></button>
+        <button type="button" id="btnReset" class="btn btn-danger action_button"><i class="fa-solid fa-arrow-rotate-left"></i></button>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body pb-0 ps-4 pe-4">
@@ -120,9 +124,18 @@
                 <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
                 <input type="text" id="inputDate" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDate" />
               </div>
-              <div class="input-group">
+              <div class="input-group mb-3">
                 <span class="input-group-text col-sm-3" id="lblDescCreator">Ersteller</span>
                 <input type="text" id="inputCreator" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCreator" />
+              </div>
+              <hr>
+              <div class="input-group mb-3 mt-3">
+                <span class="input-group-text col-sm-3" id="lblDescCommission">Kommission</span>
+                <input type="text" id="inputCommission" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCommission" />
+              </div>
+              <div class="input-group">
+                <span class="input-group-text col-sm-3" id="lblDescYear">Jahr</span>
+                <input type="text" id="inputYear" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescYear" />
               </div>
             </form>
           </div>
@@ -147,19 +160,21 @@
           <!-- data-default-file="url_of_your_file" -->
           <input type="file" id="fileDrop" class="dropify"  />
         </div>
+        <input id="file-store" hidden>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-regular fa-circle-xmark"></i> Abbrechen</button>
-        <button type="button" class="btn btn-primary"><i class="fa-solid fa-floppy-disk"></i> Speichern</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-solid fa-x"></i></button>
+        <button type="button" class="btn btn-primary" id="btnUploadFile"><i class="fa-solid fa-floppy-disk"></i> Speichern</button>
       </div>
     </div>
   </div>
 </div>
 
   <!-- File Details Modal -->
-  <div class="modal fade modal-xl draggable" id="file_details_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelDetails" aria-hidden="true">
+  <!-- data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabelDetails" -->
+  <div class="modal fade modal-xl draggable" id="file_details_modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content pb-3">
       <div class="modal-header pb-0">
         <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetails"><i class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span></button>
         <button type="button" id="btnDelete" class="btn btn-danger action_button ml-auto"><i class="fa-solid fa-trash-can"></i></button>
@@ -169,148 +184,269 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body pb-0 ps-4 pe-4">
-        <div class="row rounded" id="details-row">
-              <div class="input-group mb-3 p-0">
-                <span class="input-group-text col-sm-3" id="lblDescDescription">Beschreibung</span>
-                <textarea readonly type="text" id="inputDetailsDescription" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDescription" ></textarea>
-              </div>
-              <div class="input-group mb-3 p-0">
-                <span class="input-group-text col-sm-3" id="lblDescCategory">Kategorien</span>
-                  <input readonly type="text" id="inputDetailsCategory" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCategory" />
-              </div>
-              <div class="input-group mb-3 p-0">
-                <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
-                <input readonly type="text" id="inputDetailsDate" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDate" />
-              </div>
-              <div class="input-group mb-3 p-0">
-                <span class="input-group-text col-sm-3" id="lblDescCreator">Ersteller</span>
-                <input readonly type="text" id="inputDetailsCreator" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCreator" />
-              </div>
-              <div class="input-group mb-3 p-0">
-                <span class="input-group-text col-sm-3" id="lblDescFilesize">Dateigröße</span>
-                <input readonly type="text" id="inputDetailsFilesize" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilesize" />
-              </div>
-              <hr>
-              <div class="input-group mb-3 p-0 mt-2">
-                <span class="input-group-text col-sm-3" id="lblDescFilename">Kommission</span>
-                <input readonly type="text" id="inputDetailsCommission" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilename" />
-              </div>
-              <div class="input-group p-0">
-                <span class="input-group-text col-sm-3" id="lblDescFilename">Jahr</span>
-                <input readonly type="text" id="inputDetailsYear" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilename" />
-              </div>
+        <div class="row g-2 rounded">
+          <div class="col-8 rounded" id="details-row">
+            <div class="input-group mb-3 p-0">
+              <span class="input-group-text col-sm-3" id="lblDescDescription">Beschreibung</span>
+              <textarea readonly type="text" id="inputDetailsDescription" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDescription" ></textarea>
+            </div>
+            <div class="input-group mb-3 p-0">
+              <span class="input-group-text col-sm-3" id="lblDescCategory">Kategorien</span>
+                <input readonly type="text" id="inputDetailsCategory" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCategory" />
+            </div>
+            <div class="input-group mb-3 p-0">
+              <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
+              <input readonly type="text" id="inputDetailsDate" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDate" />
+            </div>
+            <div class="input-group mb-3 p-0">
+              <span class="input-group-text col-sm-3" id="lblDescCreator">Ersteller</span>
+              <input readonly type="text" id="inputDetailsCreator" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCreator" />
+            </div>
+            <div class="input-group mb-3 p-0">
+              <span class="input-group-text col-sm-3" id="lblDescFilesize">Dateigröße</span>
+              <input readonly type="text" id="inputDetailsFilesize" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilesize" />
+            </div>
+            <hr>
+            <div class="input-group mb-3 p-0 mt-3">
+              <span class="input-group-text col-sm-3" id="lblDescFilename">Kommission</span>
+              <input readonly type="text" id="inputDetailsCommission" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilename" />
+            </div>
+            <div class="input-group p-0">
+              <span class="input-group-text col-sm-3" id="lblDescFilename">Jahr</span>
+              <input readonly type="text" id="inputDetailsYear" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilename" />
+            </div>
+          </div>
+          <div class="col-4 rounded ps-2">
+              <div id="file-notes" class="col-sm-12 flex50 mt-1">
+                <ul class="list-unstyled">
+                    <li class="media mb-3" id="note-{{ $notes->id }}">
+                        <div class="media-body">
+                            <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> Elias Nöhring
+                                <span class="float-end font-italic font-weight-light">
+                                    14.11.2023 09:40:52
+                                </span>
+                            </div>
+                            <p class="note-text">Erster Kommentar</p>
+                            <div class="note-textarea"></div>
+                        </div>
+                    </li>
+                    <li class="media mb-3" id="note-{{ $notes->id }}">
+                      <div class="media-body">
+                          <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> André Gansel
+                              <span class="float-end font-italic font-weight-light">
+                                  14.11.2023 09:52:33
+                              </span>
+                          </div>
+                          <p class="note-text">Zweiter Kommentar</p>
+                          <div class="note-textarea"></div>
+                      </div>
+                  </li>
+                  <li class="media mb-3" id="note-{{ $notes->id }}">
+                    <div class="media-body">
+                        <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> Andreas Brock
+                            <span class="float-end font-italic font-weight-light">
+                                14.11.2023 10:15:46
+                            </span>
+                        </div>
+                        <p class="note-text">Dritter Kommentar</p>
+                        <div class="note-textarea"></div>
+                    </div>
+                </li>
+                </ul>
+            </div>
+          </div>
         </div>
-
         <div class="row rounded p-0">
           <nav id="preview-toggle-nav" class="ps-0 pe-0 mt-3">
             <div class="nav nav-pills nav-justified bg-primary ms-0" id="nav-tab" role="tablist">
-              <button class="nav-link active bg-primary m-0" id="nav-versions-tab" data-mdb-toggle="tab" data-mdb-target="#nav-versions" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fa-solid fa-list-ol"></i> Dateiversionen</button>
+              <button class="nav-link active bg-primary m-0" id="nav-versions-tab" data-mdb-toggle="tab" data-mdb-target="#nav-versions" type="button" role="tab" aria-controls="nav-home" aria-selected="true"><i class="fa-solid fa-list-ol"></i> Versionen</button>
+              <button class="nav-link bg-primary m-0" id="nav-history-tab" data-mdb-toggle="tab" data-mdb-target="#nav-history" type="button" role="tab" aria-controls="nav-history" aria-selected="true"><i class="fa-solid fa-timeline"></i> Bearbeitungsverlauf</button>
               <button class="nav-link bg-primary m-0" id="nav-shares-tab" data-mdb-toggle="tab" data-mdb-target="#nav-shares" type="button" role="tab" aria-controls="nav-profile" aria-selected="false"><i class="fa-solid fa-share-nodes"></i> Freigaben</button>
               </div>
           </nav>
           <div class="tab-content ps-0 pe-0" id="nav-tabContent">
             <div class="tab-pane fade show active" id="nav-versions" role="tabpanel" aria-labelledby="nav-versions-tab" tabindex="0">
               <div class="rounded" id="versionsRow">
-              <table class="table table-striped mb-0">
-                <thead>
-                  <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Beschreibung</th>
-                    <th scope="col">Bearbeiter</th>
-                    <th scope="col">Erstelldatum</th>
-                    <th scope="col">Aktionen</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  <tr>
-                    <td>1</td>
-                    <td>Sehr tolle Datei</td>
-                    <td>Elias Nöhring</td>
-                    <td>31.08.2023 15:20</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>2</td>
-                    <td>Viele Änderungen</td>
-                    <td>Elias Nöhring</td>
-                    <td>31.08.2023 16:56</td>
-                    <td></td>
-                  </tr>
-                  <tr>
-                    <td>3</td>
-                    <td>Viele weitere Änderungen</td>
-                    <td>Elias Nöhring</td>
-                    <td>01.09.2023 09:25</td>
-                    <td></td>
-                  </tr>
-                </tbody>
-              </table>
+                <div id="versions" class="col-sm-12 flex50 mt-1">
+                  <ul class="list-unstyled">
+                      <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                        <div id="line" style="background-color: blue;"></div>
+                          <div class="media-body row me-4">
+                            <div class="col-1 versionIcon">
+                              <div class="icon-wrapper">
+                                <i class="fa-solid fa-clock" id="end2"></i>
+                              </div>
+                            </div>
+                            <div class="col-11">
+                              <div class="mt-0 mb-1"><b>Version 3</b> - Elias Nöhring <span class="badge rounded-pill text-bg-primary ms-3">Current</span>
+                                <span class="float-end font-italic font-weight-light">
+                                    14.11.2023 09:40 Uhr
+                                </span>
+                            </div>
+                            <p class="note-text">Viele Sachen verändert</p>
+                            <div class="note-textarea"></div>
+                            </div>
+                          </div>
+                      </li>
+                      <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                        <div class="media-body row me-4">
+                          <div class="col-1 versionIcon">
+                            <div class="icon-wrapper">
+                            <i class="fa-regular fa-clock" id="end1"></i>
+                          </div>
+                          </div>
+                          <div class="col-11">
+                            <div class="mt-0 mb-1"><b>Version 2</b> - André Gansel
+                              <span class="float-end font-italic font-weight-light">
+                                  14.11.2023 09:40 Uhr
+                              </span>
+                          </div>
+                          <p class="note-text">Änderungen am Design</p>
+                          <div class="note-textarea"></div>
+                          </div>
+                        </div>
+                    </li>
+                    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                      <div class="media-body row me-4">
+                        <div class="col-1 versionIcon">
+                          <div class="icon-wrapper">
+                          <i class="fa-regular fa-clock" id="start1"></i>
+                        </div>
+                        </div>
+                        <div class="col-11">
+                          <div class="mt-0 mb-1"><b>Version 1</b> - Andreas Brock
+                            <span class="float-end font-italic font-weight-light">
+                                14.11.2023 09:40 Uhr
+                            </span>
+                        </div>
+                        <p class="note-text">Sehr tolle Datei</p>
+                        <div class="note-textarea"></div>
+                        </div>
+                      </div>
+                  </li>
+                  </ul>
+            </div>
+              </div>
+            </div>
+            <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0">
+              <div id="edit-history" class="col-sm-12 flex50 mt-1 rounded ps-4 pe-4">
+                <ul class="list-unstyled">
+                  <li class="media mb-3" id="note-{{ $notes->id }}">
+                    <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>Elias Nöhring</b> hat den Namen zu <span class="edit-highlight">Testdatei.pdf</span> geändert.
+                      <span class="float-end font-italic font-weight-light">
+                        15.11.2023 16:22 Uhr
+                      </span>
+                    </div>
+                  </li>
+                  <li class="media mb-3" id="note-{{ $notes->id }}">
+                    <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>André Gansel</b> hat die Beschreibung zu <span class="edit-highlight">Sehr tolle Datei, die ich bearbeitet habe</span> geändert.
+                      <span class="float-end font-italic font-weight-light">
+                        15.11.2023 13:12 Uhr
+                      </span>
+                    </div>
+                  </li>
+                  <li class="media" id="note-{{ $notes->id }}">
+                    <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>André Gansel</b> hat die Datei zur Kategorie <span class="edit-highlight">Rechnungen</span> hinzugefügt.
+                      <span class="float-end font-italic font-weight-light">
+                        14.11.2023 09:40 Uhr
+                      </span>
+                    </div>
+                  </li>
+                </ul>
             </div>
             </div>
             <div class="tab-pane fade" id="nav-shares" role="tabpanel" aria-labelledby="nav-shares-tab" tabindex="0">
-              <div class="row g-0">
-                <div class="col-6 rounded" id="versionsRow">
-                  <table class="table table-striped caption-top mb-0">
-                    <caption>Mit Nutzern Geteilt</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Geteilt Von</th>
-                        <th scope="col">Geteilt Bis</th>
-                        <th scope="col">Erstelldatum</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>Elias Nöhring</td>
-                        <td>31.08.2023 15:20</td>
-                        <td>31.09.2023 15:20</td>
-                        <td>30.08.2023 14:36</td>
-                      </tr>
-                      <tr>
-                        <td>André Gansel</td>
-                        <td>31.08.2023 15:22</td>
-                        <td>24.12.2023 17:00</td>
-                        <td>30.08.2023 16:42</td>
-                      </tr>
-                      <tr>
-                        <td>Abraham Joseph</td>
-                        <td>31.08.2023 15:20</td>
-                        <td>31.08.2023 17:20</td>
-                        <td>31.08.2023 15:18</td>
-                      </tr>
-                    </tbody>
-                  </table>
+              <div class="row rounded smallFont ps-4" id="shares">
+                <div class="col-6">
+                  <h6>Gruppen mit Zugriff</h6>
+                  <ul class="list-unstyled">
+                    <li class="mb-2">
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
+                        </div>
+                        <div class="col-11">
+                      <div class="mt-0 mb-1 edit-text"> <b>ABT-ISO-IT-Mitarbeiter</b><br>
+                        Geteilt am 12.10.2023 12:10 Uhr
+                      </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="media mb-2">
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
+                        </div>
+                        <div class="col-11">
+                      <div class="mt-0 mb-1 edit-text"><b>ABT-ISO-IT-Leitung</b><br>
+                        Geteilt am 12.10.2023 12:10 Uhr
+                      </div>
+                      </div>  
+                    </div> 
+                    </li>
+                    <li class="media mb-2" >
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
+                        </div>
+                        <div class="col-11">
+                      <div class="mt-0 mb-1 edit-text"><b>ABT-ISO-Buchhaltung-Mitarbeiter</b><br>
+                        Geteilt am 12.10.2023 12:10 Uhr
+                      </div>
+                      </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
-                <div class="col-6 rounded" id="sharesRow">
-                  <table class="table table-striped caption-top mb-0">
-                    <caption>Mit Gruppen Geteilt</caption>
-                    <thead>
-                      <tr>
-                        <th scope="col">Name</th>
-                        <th scope="col">Geteilt Von</th>
-                        <th scope="col">Geteilt Bis</th>
-                        <th scope="col">Erstelldatum</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td>ABT-ICE-Buchhaltung-Mitarbeiter</td>
-                        <td>25.09.2023 08:00</td>
-                        <td>24.02.2024 17:00</td>
-                        <td>21.08.2023 15:36</td>
-                      </tr>
-                    </tbody>
-                  </table>
+                <div class="col-6">
+                  <h6>Nutzer mit Zugriff</h6>
+                  <ul class="list-unstyled">
+                    <li class="mb-2">
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
+                        </div>
+                        <div class="col-11">
+                          <div class="mt-0 mb-1 edit-text"><b>Elias Nöhring</b><span class="user-details ms-2">(e.noehring)</span><br>
+                              Geteilt am 12.10.2023 12:10 Uhr
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                    <li class="media mb-2">
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
+                        </div>
+                        <div class="col-11">
+                      <div class="mt-0 mb-1 edit-text"><b>André Gansel</b><span class="user-details ms-2">(a.gansel)</span><br>
+                        Geteilt am 11.11.2023 09:34 Uhr
+                      </div>
+                      </div>
+                      </div>
+                    </li>
+                    <li class="media mb-2" >
+                      <div class="row rounded share-row">
+                        <div class="col-1">
+                          <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
+                        </div>
+                        <div class="col-11">
+                      <div class="mt-0 mb-1 edit-text"><b>Andreas Brock</b><span class="user-details ms-2">(a.brock)</span><br>
+                        Geteilt am 15.11.2023 16:20 Uhr
+                      </div>
+                      </div>
+                      </div>
+                    </li>
+                  </ul>
                 </div>
               </div>
           </div>
         </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-regular fa-circle-xmark"></i> Schließen</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -364,7 +500,7 @@
           </div>
         </div>
         <div class="footer-col-12 pt-3 row g-0 border-top">
-          <div class="btn-group-vertical col-4 pe-0" role="group" aria-label="Vertical button group">
+          <div class="btn-group-vertical col-5 pe-0" role="group" aria-label="Vertical button group">
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Mitarbeiter</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Azubi</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Leitung</button>
@@ -372,41 +508,35 @@
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-IT-Mitarbeiter</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-IT-Leitung</button>
           </div>
-          <div class="col-8 ps-2">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Vorname</th>
-                  <th>Nachname</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Elias</td>
-                  <td>Nöhring</td>
-                </tr>
-                <tr>
-                  <td>André</td>
-                  <td>Gansel</td>
-                </tr>
-                <tr>
-                  <td>Andreas</td>
-                  <td>Brock</td>
-                </tr>
-                <tr>
-                  <td>Abraham</td>
-                  <td>Joseph</td>
-                </tr>
-                <tr>
-                  <td>Haris</td>
-                  <td>Musthafa</td>
-                </tr>
-                <tr>
-                  <td>Andreas</td>
-                  <td>Brock</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-7 ps-2">
+            <h6>Mitglieder</h6>
+            <div class="row g-0">
+              <div class="col-4 p-1">
+                  <div class="user-name p-1 pt-2 pb-2 rounded">
+                    <span><i class="fa-solid fa-user"></i></span> Elias Nöhring <br> (e.noehring)
+                  </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> André Gansel <br> (a.gansel)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                    <span><i class="fa-solid fa-user"></i></span> Andreas Brock <br> (a.brock)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> Marcel Pfisterer <br> (m.pfisterer)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> Abraham Joseph <br> (a.joseph)
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -433,6 +563,5 @@
     <span class="spinner"></span>
   </div>
 </div>
-
   </body>
 </html>
