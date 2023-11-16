@@ -171,9 +171,10 @@
 </div>
 
   <!-- File Details Modal -->
-  <div class="modal fade modal-xl draggable" id="file_details_modal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabelDetails" aria-hidden="true">
+  <!-- data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabelDetails" -->
+  <div class="modal fade modal-xl draggable" id="file_details_modal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog">
-    <div class="modal-content">
+    <div class="modal-content pb-3">
       <div class="modal-header pb-0">
         <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetails"><i class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span></button>
         <button type="button" id="btnDelete" class="btn btn-danger action_button ml-auto"><i class="fa-solid fa-trash-can"></i></button>
@@ -328,7 +329,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0">
-              <div id="edit-history" class="col-sm-12 flex50 mt-1 rounded">
+              <div id="edit-history" class="col-sm-12 flex50 mt-1 rounded ps-4 pe-4">
                 <ul class="list-unstyled">
                   <li class="media mb-3" id="note-{{ $notes->id }}">
                     <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>Elias Nöhring</b> hat den Namen zu <span class="edit-highlight">Testdatei.pdf</span> geändert.
@@ -355,14 +356,14 @@
             </div>
             </div>
             <div class="tab-pane fade" id="nav-shares" role="tabpanel" aria-labelledby="nav-shares-tab" tabindex="0">
-              <div class="row rounded">
+              <div class="row rounded smallFont ps-4" id="shares">
                 <div class="col-6">
                   <h6>Gruppen mit Zugriff</h6>
                   <ul class="list-unstyled">
                     <li class="mb-2">
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
-                          <i class="fa-solid fa-users-rectangle fa-xl user-icon"></i>
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
                         </div>
                         <div class="col-11">
                       <div class="mt-0 mb-1 edit-text"> <b>ABT-ISO-IT-Mitarbeiter</b><br>
@@ -372,9 +373,9 @@
                       </div>
                     </li>
                     <li class="media mb-2">
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
-                          <i class="fa-solid fa-users-rectangle fa-xl user-icon"></i>
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
                         </div>
                         <div class="col-11">
                       <div class="mt-0 mb-1 edit-text"><b>ABT-ISO-IT-Leitung</b><br>
@@ -384,9 +385,9 @@
                     </div> 
                     </li>
                     <li class="media mb-2" >
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
-                          <i class="fa-solid fa-users-rectangle fa-xl user-icon"></i>
+                          <i class="fa-solid fa-users-rectangle fa-xl group-icon"></i>
                         </div>
                         <div class="col-11">
                       <div class="mt-0 mb-1 edit-text"><b>ABT-ISO-Buchhaltung-Mitarbeiter</b><br>
@@ -401,7 +402,7 @@
                   <h6>Nutzer mit Zugriff</h6>
                   <ul class="list-unstyled">
                     <li class="mb-2">
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
                           <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
                         </div>
@@ -413,7 +414,7 @@
                       </div>
                     </li>
                     <li class="media mb-2">
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
                           <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
                         </div>
@@ -425,7 +426,7 @@
                       </div>
                     </li>
                     <li class="media mb-2" >
-                      <div class="row">
+                      <div class="row rounded share-row">
                         <div class="col-1">
                           <i class="fa-regular fa-circle-user fa-2xl user-icon"></i>
                         </div>
@@ -443,9 +444,9 @@
         </div>
         </div>
       </div>
-      <div class="modal-footer">
+      <!-- <div class="modal-footer">
         <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="abortUpload"><i class="fa-regular fa-circle-xmark"></i> Schließen</button>
-      </div>
+      </div> -->
     </div>
   </div>
 </div>
@@ -499,7 +500,7 @@
           </div>
         </div>
         <div class="footer-col-12 pt-3 row g-0 border-top">
-          <div class="btn-group-vertical col-4 pe-0" role="group" aria-label="Vertical button group">
+          <div class="btn-group-vertical col-5 pe-0" role="group" aria-label="Vertical button group">
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Mitarbeiter</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Azubi</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-Buchhaltung-Leitung</button>
@@ -507,41 +508,35 @@
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-IT-Mitarbeiter</button>
             <button type="button" class="btn btn-primary smallFont">ABT-ICE-IT-Leitung</button>
           </div>
-          <div class="col-8 ps-2">
-            <table class="table table-striped">
-              <thead>
-                <tr>
-                  <th>Vorname</th>
-                  <th>Nachname</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Elias</td>
-                  <td>Nöhring</td>
-                </tr>
-                <tr>
-                  <td>André</td>
-                  <td>Gansel</td>
-                </tr>
-                <tr>
-                  <td>Andreas</td>
-                  <td>Brock</td>
-                </tr>
-                <tr>
-                  <td>Abraham</td>
-                  <td>Joseph</td>
-                </tr>
-                <tr>
-                  <td>Haris</td>
-                  <td>Musthafa</td>
-                </tr>
-                <tr>
-                  <td>Andreas</td>
-                  <td>Brock</td>
-                </tr>
-              </tbody>
-            </table>
+          <div class="col-7 ps-2">
+            <h6>Mitglieder</h6>
+            <div class="row g-0">
+              <div class="col-4 p-1">
+                  <div class="user-name p-1 pt-2 pb-2 rounded">
+                    <span><i class="fa-solid fa-user"></i></span> Elias Nöhring <br> (e.noehring)
+                  </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> André Gansel <br> (a.gansel)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                    <span><i class="fa-solid fa-user"></i></span> Andreas Brock <br> (a.brock)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> Marcel Pfisterer <br> (m.pfisterer)
+                </div>
+              </div>
+              <div class="col-4 p-1">
+                <div class="user-name p-1 pt-2 pb-2 rounded">
+                  <span><i class="fa-solid fa-user"></i></span> Abraham Joseph <br> (a.joseph)
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

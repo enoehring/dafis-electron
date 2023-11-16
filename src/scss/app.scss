@@ -226,7 +226,7 @@ ul {
     border-top: 0;
 }
 
-#details-row, #versionsRow, #sharesRow, #edit-history {
+#details-row, #versionsRow, #sharesRow, #edit-history, #shares {
     background-color: var(--bs-dark-bg-subtle) !important;
     padding: .7rem;
 }
@@ -408,3 +408,21 @@ caption {
 .edit-text b {
   color: var(--bs-emphasis-color);
 } 
+
+.user-icon {
+  padding-top: 7px;
+}
+
+.group-icon {
+  padding-top: 10px;
+}
+
+.share-row:hover, .user-name:hover {
+  background-color: var(--bs-secondary-bg-subtle) !important;
+}
+
+.user-name {
+  text-align: center;
+  background-color: var(--bs-body-bg) !important;
+  font-size: 13px;
+}
