@@ -192,7 +192,7 @@
             </div>
             <div class="input-group mb-3 p-0">
               <span class="input-group-text col-sm-3" id="lblDescCategory">Kategorien</span>
-                <input readonly type="text" id="inputDetailsCategory" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCategory" />
+                <label readonly type="text" id="inputDetailsCategory" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescCategory" ></label>
             </div>
             <div class="input-group mb-3 p-0">
               <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
@@ -268,7 +268,7 @@
             <div class="tab-pane fade show active" id="nav-versions" role="tabpanel" aria-labelledby="nav-versions-tab" tabindex="0">
               <div class="rounded" id="versionsRow">
                 <div id="versions" class="col-sm-12 flex50 mt-1">
-                  <ul class="list-unstyled">
+                  <ul class="list-unstyled" id="file-details-version-list">
                       <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
                         <div id="line" style="background-color: blue;"></div>
                           <div class="media-body row me-4">

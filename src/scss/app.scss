@@ -426,3 +426,12 @@ caption {
   background-color: var(--bs-body-bg) !important;
   font-size: 13px;
 }
+
+#versionsRow {
+  max-height: 300px;
+  overflow: auto;
+}
+
+#versionsRow::-webkit-scrollbar {
+  display: none;
+}

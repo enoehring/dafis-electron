@@ -3,6 +3,7 @@ import { Modal } from 'bootstrap';
 import * as mdb from 'mdb-ui-kit'; // lib
 import { Input } from 'mdb-ui-kit'; // module
 import * as toastr from 'toastr';
+import { error } from 'jquery';
 
 require('dropify');
 window.$ = window.jQuery = require("jquery");
@@ -369,8 +370,6 @@ function upload_file_to_Api() {
 
   var fileExists = false;
 
-  console.log(inputFile);
-
   if ($("#inputDate")[0].value != "") {
       var Description = $("#inputDescription")[0].value;
 
@@ -431,7 +430,7 @@ function clearUploadForm() {
   files = [];
 }
 
-// document.getElementById('file_details_modal').addEventListener('shown.bs.modal', () => {
+document.getElementById('file_details_modal').addEventListener('show.bs.modal', () => {
 //   var line1 = new LeaderLine(
 //     document.getElementById('start1'),
 //     document.getElementById('end1'), {
@@ -447,4 +446,37 @@ function clearUploadForm() {
 //       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
 //     }
 // );
-// })
+console.log(currentClickedRowData);
+
+  $.ajax({
+    url: "https://localhost:44349/File/GetDetails",
+    data: {
+      fileDescriptorId: currentClickedRowData.FileDescriptorId
+    },
+    headers: {
+        UserId: loginSession.UserId,
+        SessionToken: loginSession.SessionToken,
+        Company: loginSession.Company
+    },
+    success: function(data) {
+        console.log(JSON.parse(data.result));
+
+        if(data.success) {
+          var result = JSON.parse(data.result)
+
+          $("#file-details-version-list").html("");
+          result.Versions.forEach(function(item) {
+            $("#file-details-version-list").append(item);
+          });
+
+          $("#inputDetailsCategory").html("");
+          result.Categories.forEach(function(item) {
+            $("#inputDetailsCategory").append(item);
+          });
+        }
+    },
+    error: function(data) {
+        console.log(error);
+    }
+  });
+})
