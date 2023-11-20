@@ -74,7 +74,48 @@ $(".tree-leaf-content").click(function(e) {
   console.log($(this).data("item").CategoryID);
   var search = "^" + $(this).data("item").CategoryID + "$";
   table.column(5).search(search, true, false, true).draw();
+
+  var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
+  console.log(breadcrumbString);
+  $("#category-navigation").html(breadcrumbString);
 });
+
+function getCategoryBreadcrumb(categoryId) {
+  function findCategory(currentCategory, targetId, currentPath) {
+      // Füge die aktuelle Kategorie zum Pfad hinzu
+      currentPath.push(`<li class="breadcrumb-item"><a href="#">${currentCategory.CategoryName}</a></li>`);
+
+      // Überprüfe, ob die aktuelle Kategorie die gesuchte Kategorie ist
+      if (currentCategory.CategoryID === targetId) {
+          return currentPath; // Gibt das Array mit den Breadcrumb-Elementen zurück
+      }
+
+      // Durchsuche die Unterkategorien, falls vorhanden
+      if (currentCategory.children && currentCategory.children.length > 0) {
+          for (const child of currentCategory.children) {
+              const path = findCategory(child, targetId, [...currentPath]); // Kopiere den aktuellen Pfad
+              if (path) {
+                  return path; // Wenn der Pfad gefunden wurde, beende die Suche
+              }
+          }
+      }
+
+      return null; // Wenn die Kategorie nicht gefunden wurde, gib null zurück
+  }
+
+  // Starte die rekursive Suche mit der Wurzelkategorie
+  for (const category of $.categories) {
+      const breadcrumb = findCategory(category, categoryId, []);
+      if (breadcrumb) {          
+          // Füge das Attribut und die Klasse zum letzten Element hinzu
+          breadcrumb[breadcrumb.length - 1] = breadcrumb[breadcrumb.length - 1].replace('<li class="breadcrumb-item"><a href="#">', '<li aria-current="page" class="active breadcrumb-item">').replace('</a>', '');
+
+          return breadcrumb; // Wenn der Pfad gefunden wurde, gib das Array mit den Breadcrumb-Elementen zurück
+      }
+  }
+
+  return ['<li class="breadcrumb-item">Kategorie nicht gefunden</li>']; // Wenn die Kategorie nicht gefunden wurde, gib eine Meldung aus
+}
 
 $($.categories).each(function(index, item) {
   var option = document.createElement("option");
@@ -342,12 +383,11 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  });
 
  $("#btnHome").click(function(e) {
-
-  console.log($.loginSession());
-
   table.column(5).search("", true, false, true).draw();
   $(".tree-leaf-content").removeClass("folderSelected");
   tree.collapseAll();
+
+  $("#category-navigation").html('<li class="breadcrumb-item active" aria-current="page">Hauptverzeichnis</li>');
  });
 
 
@@ -430,7 +470,12 @@ function clearUploadForm() {
   files = [];
 }
 
-document.getElementById('file_details_modal').addEventListener('show.bs.modal', () => {
+$("#contextBtnProperties").click(function(e) {
+
+  $("#file-details-version-list").html($("#version-placeholder").html());
+  $("#inputDetailsCategory").html($("#category-placeholder").html());
+
+// document.getElementById('file_details_modal').addEventListener('show.bs.modal', () => {
 //   var line1 = new LeaderLine(
 //     document.getElementById('start1'),
 //     document.getElementById('end1'), {
@@ -446,10 +491,9 @@ document.getElementById('file_details_modal').addEventListener('show.bs.modal', 
 //       color: 'rgba(var(--bs-secondary-bg-rgb), 0.5)', // translucent
 //     }
 // );
-console.log(currentClickedRowData);
 
   $.ajax({
-    url: "https://localhost:44349/File/GetDetails",
+    url: "http://dev.dafis-api.inoclad.corp/File/GetDetails",
     data: {
       fileDescriptorId: currentClickedRowData.FileDescriptorId
     },
@@ -462,7 +506,7 @@ console.log(currentClickedRowData);
         console.log(JSON.parse(data.result));
 
         if(data.success) {
-          var result = JSON.parse(data.result)
+          var result = JSON.parse(data.result);
 
           $("#file-details-version-list").html("");
           result.Versions.forEach(function(item) {
@@ -479,4 +523,16 @@ console.log(currentClickedRowData);
         console.log(error);
     }
   });
+});
+
+
+$("#checkbox").on("change", () => {
+  var html = $("html");
+
+  if(html.attr("data-bs-theme") == "dark") {
+    html.attr("data-bs-theme", "light");
+  }
+  else {
+    html.attr("data-bs-theme", "dark");
+  }
 })

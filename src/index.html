@@ -15,13 +15,19 @@
                   </div>
                   <span id="lblCurrentFolder" class="col-md-10 col-sm-9" data-currentFolderId="0">
                     <nav aria-label="breadcrumb" class="mt-auto mb-auto">
-                      <ol class="breadcrumb mt-auto mb-auto">
-                        <li class="breadcrumb-item"><a href="#">Home</a></li>
-                        <li class="breadcrumb-item"><a href="#">Library</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Data</li>
+                      <ol class="breadcrumb mt-auto mb-auto" id="category-navigation">
+                        <li class="breadcrumb-item active" aria-current="page">Hauptverzeichnis</li>
                       </ol>
                     </nav>
                   </span>
+                  <div class="col-md-1" style="text-align: -webkit-right;">
+                    <input type="checkbox" class="checkbox float-end" id="checkbox">
+                    <label for="checkbox" class="checkbox-label">
+                      <i class="fas fa-moon"></i>
+                      <i class="fas fa-sun"></i>
+                      <span class="ball"></span>
+                    </label>
+                  </div>
           </div>
           <div class="row pt-2 pb-2 mb-3 border-bottom">
             <div class="col-3 btn-group" role="group" aria-label="Basic example" id="btnGroupButtons">
@@ -173,7 +179,7 @@
   <!-- File Details Modal -->
   <!-- data-bs-backdrop="static" data-bs-keyboard="false" aria-labelledby="staticBackdropLabelDetails" -->
   <div class="modal fade modal-xl draggable" id="file_details_modal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog">
+  <div class="modal-dialog placeholder-glow">
     <div class="modal-content pb-3">
       <div class="modal-header pb-0">
         <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetails"><i class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span></button>
@@ -329,7 +335,7 @@
               </div>
             </div>
             <div class="tab-pane fade" id="nav-history" role="tabpanel" aria-labelledby="nav-history-tab" tabindex="0">
-              <div id="edit-history" class="col-sm-12 flex50 mt-1 rounded ps-4 pe-4">
+              <div id="edit-history" class="col-sm-12 flex50 rounded ps-4 pe-4">
                 <ul class="list-unstyled">
                   <li class="media mb-3" id="note-{{ $notes->id }}">
                     <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>Elias Nöhring</b> hat den Namen zu <span class="edit-highlight">Testdatei.pdf</span> geändert.
@@ -356,7 +362,7 @@
             </div>
             </div>
             <div class="tab-pane fade" id="nav-shares" role="tabpanel" aria-labelledby="nav-shares-tab" tabindex="0">
-              <div class="row rounded smallFont ps-4" id="shares">
+              <div class="row rounded smallFont ps-4 g-0" id="shares">
                 <div class="col-6">
                   <h6>Gruppen mit Zugriff</h6>
                   <ul class="list-unstyled">
@@ -544,6 +550,7 @@
   </div>
 </div>
 
+<!-- Kontextmenü -->
   <div id="contextMenu" class="context-menu" style="display: none"> 
     <ul class="menu"> 
         <li class="share"><a href="#" id="contextBtnShare"><i class="fa fa-share pe-1" aria-hidden="true"></i> Share</a></li> 
@@ -558,10 +565,76 @@
     </ul> 
 </div> 
 
+<!-- Loading Spinnger -->
 <div id="overlay">
   <div class="cv-spinner">
     <span class="spinner"></span>
   </div>
+</div>
+
+<!-- Version Placeholder -->
+<div id="version-placeholder" style="display: none;">
+    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+      <div id="line" style="background-color: blue;"></div>
+        <div class="media-body row me-4 placeholder-glow">
+          <div class="col-1 versionIcon">
+            <div class="icon-wrapper">
+              <i class="fa-solid fa-clock" id="end2"></i>
+            </div>
+          </div>
+          <div class="col-11">
+            <div class="mt-0 mb-1"><b><span class="placeholder col-1"></span></b> - <span class="placeholder col-3"></span> <span class="badge bg-primary col-1 placeholder"></span>
+              <div class="float-end font-italic font-weight-light col-1">
+                <span class="placeholder col-12"></span>
+              </div>
+          </div>
+          <p class="note-text"><span class="placeholder col-3"></span></p>
+          <div class="note-textarea"></div>
+          </div>
+        </div>
+    </li>
+    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+      <div id="line" style="background-color: blue;"></div>
+        <div class="media-body row me-4 placeholder-glow">
+          <div class="col-1 versionIcon">
+            <div class="icon-wrapper">
+              <i class="fa-solid fa-clock" id="end2"></i>
+            </div>
+          </div>
+          <div class="col-11">
+            <div class="mt-0 mb-1"><b><span class="placeholder col-1"></span></b> - <span class="placeholder col-3"></span>
+              <div class="float-end font-italic font-weight-light col-1">
+                <span class="placeholder col-12"></span>
+              </div>
+          </div>
+          <p class="note-text"><span class="placeholder col-3"></span></p>
+          <div class="note-textarea"></div>
+          </div>
+        </div>
+    </li>
+    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+      <div id="line" style="background-color: blue;"></div>
+        <div class="media-body row me-4 placeholder-glow">
+          <div class="col-1 versionIcon">
+            <div class="icon-wrapper">
+              <i class="fa-solid fa-clock" id="end2"></i>
+            </div>
+          </div>
+          <div class="col-11">
+            <div class="mt-0 mb-1"><b><span class="placeholder col-1"></span></b> - <span class="placeholder col-3"></span>
+              <div class="float-end font-italic font-weight-light col-1">
+                <span class="placeholder col-12"></span>
+              </div>
+          </div>
+          <p class="note-text"><span class="placeholder col-3"></span></p>
+          <div class="note-textarea"></div>
+          </div>
+        </div>
+    </li>
+</div>
+
+<div id="category-placeholder" style="display: none;">
+  <span class="badge bg-primary col-2 me-1 placeholder badgePlaceholder"></span><span class="badge bg-primary col-2 placeholder badgePlaceholder"></span>
 </div>
   </body>
 </html>
