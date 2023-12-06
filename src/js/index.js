@@ -351,7 +351,9 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
     success: function(data) {
       $.successToastr();
 
-      var bytes = data;
+      var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
+
+      window.file.save(data, name);
 
       $.unblockUI();
 

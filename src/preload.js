@@ -35,6 +35,26 @@ contextBridge.exposeInMainWorld(
     }
 );
 
+
+contextBridge.exposeInMainWorld(
+    "file", {
+        save: (fileContent, path) => {
+            var downloadPath = "C:\\Users\\e.noehring\\Downloads\\" + path;
+
+            ipcRenderer.send('speichern', fileContent, downloadPath);
+
+            ipcRenderer.on('speichern-antwort', (event, result) => {
+                if (result.success) {
+                    console.log('Datei erfolgreich gespeichert!');
+                } else {
+                    console.error('Fehler beim Speichern der Datei:', result.error);
+                }
+            });
+        }
+    }
+);
+
+
 function createSession(fingerprint, userid, company) {
     _sessionToken = fingerprint;
     _userId = userid;

@@ -1,8 +1,10 @@
 const { main } = require('@popperjs/core');
-const { app, BrowserWindow, autoUpdater, ipcMain, dialog, session } = require("electron");
+const { app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell } = require("electron");
 const { event } = require('jquery');
 const path = require('path');
 const url = require("url");
+const { Buffer } = require('buffer');
+const fs = require('fs');
 
 const { platform, env } = process
 
@@ -35,16 +37,26 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+
+  ipcMain.on('speichern', (event, dateiInhalt, dateiPfad) => {
+
+    const buffer = Buffer.from(dateiInhalt, 'base64');
+
+    fs.writeFile(dateiPfad, buffer, { encoding: 'binary' }, (err) => {
+      if (err) {
+        event.reply('speichern-antwort', { success: false, error: err.message });
+      } else {
+        event.reply('speichern-antwort', { success: true });
+      }
+    });
+
+    shell.openPath(dateiPfad);
+  });
+
   var sessionData = {};
 
   ipcMain.handle("getCookies", async (event) => {
-    // return session.defaultSession.cookies.get({});
     return sessionData;
-    // session.defaultSession.cookies.get({})  .then((cookies) => {
-    //   console.log(cookies)
-    // }).catch((error) => {
-    //   console.log(error)
-    // });
   });
 
   ipcMain.on("setCookie", (event, data) => {
