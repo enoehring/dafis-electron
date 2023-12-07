@@ -5,6 +5,7 @@ const path = require('path');
 const url = require("url");
 const { Buffer } = require('buffer');
 const fs = require('fs');
+const https = require('node:https')
 
 const { platform, env } = process
 
@@ -37,12 +38,14 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+  const localFilesFolder = path.join(__dirname, "../../localFiles")
 
   ipcMain.on('speichern', (event, dateiInhalt, dateiPfad) => {
 
     const buffer = Buffer.from(dateiInhalt, 'base64');
+    var savePath = path.join(localFilesFolder, dateiPfad);
 
-    fs.writeFile(dateiPfad, buffer, { encoding: 'binary' }, (err) => {
+    fs.writeFile(savePath, buffer, { encoding: 'binary' }, (err) => {
       if (err) {
         event.reply('speichern-antwort', { success: false, error: err.message });
       } else {
@@ -50,7 +53,7 @@ const createWindow = () => {
       }
     });
 
-    shell.openPath(dateiPfad);
+    // shell.openPath(savePath);
   });
 
   var sessionData = {};
@@ -68,6 +71,21 @@ const createWindow = () => {
     resetValidatedLicenses()
 
     mainWindow.loadFile("src/login.html");
+  });
+
+  const iconName = path.join(localFilesFolder, 'iconForDragAndDrop.png')
+  const icon = fs.createWriteStream(iconName)
+
+  https.get('https://img.icons8.com/ios/452/drag-and-drop.png', (response) => {
+    response.pipe(icon)
+  })
+
+  ipcMain.on('ondragstart', (event, filePath) => {
+
+    event.sender.startDrag({
+      file: path.join(localFilesFolder, filePath),
+      icon: iconName
+    })
   })
 
   // Load our app when user is authenticated.
@@ -148,7 +166,7 @@ const createWindow = () => {
 
 
   // Load the login page by default.
-  mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+  //mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
 };
 
 // This method will be called when Electron has finished

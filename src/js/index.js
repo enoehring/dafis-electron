@@ -49,6 +49,30 @@ var table = new DataTable('#file-table', {
     ],
     initComplete: function( settings, json ) {
       // JSON IN COOKIE ABLEGEN
+      $("#file-table tbody tr").attr("draggable", "true");
+
+      $("#file-table tbody tr").on("dragstart", function(event) {
+        event.preventDefault();
+        var rowData = table.row(this).data();
+
+        var id = rowData.FileDescriptorId;     
+        $.ajax({
+          url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
+          data: {
+            fileId: id,
+            fileversion: 0,
+            returnByte: true
+          },
+          success: function(data) {
+            var name = rowData.FileName + "." + rowData.Extension;
+            window.file.save(data, name);
+            window.electron.startDrag(name);
+          },
+          error: function(data) {
+            console.log("Error");
+          }
+        });
+      });
     }
 });
 
@@ -538,3 +562,14 @@ $("#checkbox").on("change", () => {
     html.attr("data-bs-theme", "dark");
   }
 })
+
+
+document.getElementsByClassName('odd').ondragstart = (event) => {
+  event.preventDefault()
+  window.electron.startDrag('drag-and-drop-2.md')
+}
+
+// $("#file-table tbody tr").dragstart(function(event) {
+//   console.log(event);
+//   console.log(table.row(this).data());
+// });
