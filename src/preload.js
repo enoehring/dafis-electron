@@ -39,8 +39,8 @@ contextBridge.exposeInMainWorld(
 
 contextBridge.exposeInMainWorld(
     "file", {
-        save: (fileContent, path) => {
-            ipcRenderer.send('speichern', fileContent, path);
+        save: (fileContent, path, open = true) => {
+            ipcRenderer.send('speichern', fileContent, path, open);
 
             ipcRenderer.on('speichern-antwort', (event, result) => {
                 if (result.success) {

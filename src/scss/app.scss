@@ -347,8 +347,12 @@ caption {
   height: auto;
 }
 
-#inputDescription, #inputDetailsCategory, #inputDetailsDescription {
+#inputDetailsCategory, #inputDetailsDescription {
   min-height: 38px;
+}
+
+#inputDescription {
+  min-height: 80px;
 }
 
 .sticky-top {
