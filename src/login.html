@@ -218,25 +218,37 @@ canvas {
         // var encryptedPw = encrypt(pw);
 
         $.ajax({
-            url: "http://dev.dafis-api.inoclad.corp/DafisUser/Login",
+            url: "http://dev.dafis-api.inoclad.corp/DafisUser/GetCompanies",
             type: "POST",
             data: {
-                username: username,
-                password: pw
+                username: username
             },
-            headers: {
-                "company": "Inoclad Engineering",
-            },
-            success: function(result) {
-                if(result.success) {
-                    successToastr();
-                    var data = result.result;
-                  window.create.session(data.fingerprint, data.dafisUserID, "Inoclad Engineering");
-                  window.api.loadscript('electron');
-                }
-                else {
-                    errorToastr("Password oder Nutzername falsch");
-                }
+            success: function(data) {
+                $.ajax({
+                  url: "http://dev.dafis-api.inoclad.corp/DafisUser/Login",
+                  type: "POST",
+                  data: {
+                      username: username,
+                      password: pw
+                  },
+                  headers: {
+                      "company": data.result[0].companyName,
+                  },
+                  success: function(result) {
+                      if(result.success) {
+                          successToastr();
+                          var data = result.result;
+                        window.create.session(data.fingerprint, data.dafisUserID, data.result[0].companyName);
+                        window.api.loadscript('electron');
+                      }
+                      else {
+                          errorToastr("Password oder Nutzername falsch");
+                      }
+                  },
+                  error: function(data) {
+                      console.log(data);
+                  }
+              });
             },
             error: function(data) {
                 console.log(data);
