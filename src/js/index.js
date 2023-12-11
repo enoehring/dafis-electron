@@ -1,5 +1,5 @@
 import DataTable from 'datatables.net-dt';
-import { Modal } from 'bootstrap';
+import { Modal, Collapse } from 'bootstrap';
 import * as mdb from 'mdb-ui-kit'; // lib
 import { Input } from 'mdb-ui-kit'; // module
 import * as toastr from 'toastr';
@@ -579,7 +579,29 @@ document.getElementsByClassName('odd').ondragstart = (event) => {
   window.electron.startDrag('drag-and-drop-2.md')
 }
 
-// $("#file-table tbody tr").dragstart(function(event) {
-//   console.log(event);
-//   console.log(table.row(this).data());
-// });
+
+  document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+    
+    element.addEventListener('click', function (e) {
+
+      let nextEl = element.nextElementSibling;
+      let parentEl  = element.parentElement;	
+
+        if(nextEl) {
+            e.preventDefault();
+            let mycollapse = new Collapse(nextEl);
+            
+            if(nextEl.classList.contains('show')){
+              mycollapse.hide();
+            } else {
+                mycollapse.show();
+                // find other submenus with class=show
+                var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+                // if it exists, then close all of them
+                if(opened_submenu){
+                  new Collapse(opened_submenu);
+                }
+            }
+        }
+    }); // addEventListener
+  }) // forEach

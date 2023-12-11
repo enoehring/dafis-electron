@@ -510,3 +510,44 @@ caption {
 .support a:hover{
   transform: scale(1.1);
 }
+
+#offcanvasNavbar {
+  background-color: rgba(0,0,0,0.2);
+  backdrop-filter: blur(10px);
+}
+
+.menu-heading {
+  padding: 10px;
+}
+
+.sidebar li .submenu{ 
+	list-style: none; 
+	margin: 0; 
+	padding: 0; 
+	padding-left: 1rem; 
+	padding-right: 1rem;
+}
+
+.fa-sm {
+  margin-top: 5px;
+}
+
+#lblLoggedInUser {
+  height: 65px;
+  padding-left: 10px;
+  // border-top-right-radius: var(--bs-border-radius) !important;
+  margin-right: 150px;
+  padding-top: 6px;
+}
+
+#lblLoggedInUser > span {
+  font-size: smaller;
+  font-weight: 100;
+}
+
+.player {
+  height: 65px;
+  left: 249px;
+  background: rgb(13,110,253);
+  background: linear-gradient(90deg, rgba(13,110,253,1) 0%, rgba(0,0,0,0) 100%);
+}

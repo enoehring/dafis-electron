@@ -6,6 +6,60 @@
     <title>Dafis Electron</title>
   </head>
   <body>
+    <nav class="sidebar navbar fixed-top">
+      <div class="container-fluid">
+        <div class="offcanvas offcanvas-start" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+          <div class="offcanvas-header">
+            <h5 class="offcanvas-title" id="offcanvasNavbarLabel">Menü</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+          </div>
+          <div class="offcanvas-body">
+            <div class="nav flex-column">
+              <div class="menu-heading">Allgemein</div>
+              <a class="nav-link" href="#">
+                <i class="fa-solid fa-file-lines"></i> Dateien
+              </a>
+              <a class="nav-link" href="#">
+                <i class="fa-solid fa-sitemap"></i> Organigramm
+              </a>
+              <hr>
+              <div id="admin">
+                <div class="menu-heading">Admin</div>
+                <li class="nav-item has-submenu">
+                  <a class="nav-link" href="#"><i class="fa-solid fa-gear"></i> Admin Bereich <i class="fa-solid fa-chevron-down fa-sm float-end"></i></a>
+                  <ul class="submenu collapse">
+                    <li><a class="nav-link" href="#"><i class="fa-solid fa-user"></i> Nutzer </a></li>
+                    <li><a class="nav-link" href="#"><i class="fa-solid fa-users"></i> Gruppen</a></li>
+                    <li><a class="nav-link" href="#"><i class="fa-solid fa-folder-tree"></i> Kategorien </a></li>
+                  </ul>
+                </li>
+              </div>
+              <hr>
+              <div class="menu-heading">Schnellsettings</div>
+              <div class="btn-group me-2" role="group" aria-label="First group">
+                <button type="button" class="btn btn-primary"  data-mdb-ripple-init>
+                  <div style="text-align: -webkit-center; width: 0;">
+                  <input type="checkbox" class="checkbox float-end" id="checkbox">
+                  <label for="checkbox" class="checkbox-label">
+                    <i class="fas fa-moon"></i>
+                    <i class="fas fa-sun"></i>
+                    <span class="ball"></span>
+                  </label>
+                </div></button>
+                <button type="button" class="btn btn-primary"  data-mdb-ripple-init>2</button>
+                <button type="button" class="btn btn-primary"  data-mdb-ripple-init>3</button>
+                <button type="button" class="btn btn-primary"  data-mdb-ripple-init>4</button>
+              </div>
+              <div class="player fixed-bottom"></div>
+              <div class="bg-primary fixed-bottom" id="lblLoggedInUser">
+                <span>Eingeloggter Nutzer:</span><br> <b>Elias Nöhring</b>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+
     <input hidden id="SessionToken" value="Test">
     <div id="fileManager">
       <div id="managerNavigation" class="sticky-top">
@@ -31,8 +85,9 @@
           </div>
           <div class="row pt-2 pb-2 mb-3 border-bottom">
             <div class="col-3 btn-group" role="group" aria-label="Basic example" id="btnGroupButtons">
-              <button class="btn btn-link" id="btnShowAllFiles" data-placement="top"
-                      data-trigger="hover" data-toggle="popover" data-content="Alle Anzeigen">
+              <button class="btn btn-link" id="btnShowAllFiles" data-placement="top" data-trigger="hover" data-toggle="popover" 
+                  data-content="Alle Anzeigen" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar" 
+                  aria-label="Toggle navigation">
                   <i class="fas fa-list-ul"></i>
               </button>
               <button class="btn btn-link" id="btnRefresh" data-placement="top"
