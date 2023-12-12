@@ -1,8 +1,11 @@
 const { main } = require('@popperjs/core');
-const { app, BrowserWindow, autoUpdater, ipcMain, dialog, session } = require("electron");
+const { app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell } = require("electron");
 const { event } = require('jquery');
 const path = require('path');
 const url = require("url");
+const { Buffer } = require('buffer');
+const fs = require('fs');
+const https = require('node:https')
 
 const { platform, env } = process
 
@@ -35,16 +38,30 @@ const createWindow = () => {
   // Open the DevTools.
   mainWindow.webContents.openDevTools();
 
+  const localFilesFolder = path.join(__dirname, "../../localFiles")
+
+  ipcMain.on('speichern', (event, dateiInhalt, dateiPfad, open = true) => {
+
+    const buffer = Buffer.from(dateiInhalt, 'base64');
+    var savePath = path.join(localFilesFolder, dateiPfad);
+
+    fs.writeFile(savePath, buffer, { encoding: 'binary' }, (err) => {
+      if (err) {
+        event.reply('speichern-antwort', { success: false, error: err.message });
+      } else {
+        event.reply('speichern-antwort', { success: true });
+      }
+    });
+
+    if(open) {
+      shell.openPath(savePath);
+    }
+  });
+
   var sessionData = {};
 
   ipcMain.handle("getCookies", async (event) => {
-    // return session.defaultSession.cookies.get({});
     return sessionData;
-    // session.defaultSession.cookies.get({})  .then((cookies) => {
-    //   console.log(cookies)
-    // }).catch((error) => {
-    //   console.log(error)
-    // });
   });
 
   ipcMain.on("setCookie", (event, data) => {
@@ -56,60 +73,21 @@ const createWindow = () => {
     resetValidatedLicenses()
 
     mainWindow.loadFile("src/login.html");
+  });
+
+  const iconName = path.join(localFilesFolder, 'dnd.png')
+
+  ipcMain.on('ondragstart', (event, filePath) => {
+
+    event.sender.startDrag({
+      file: path.join(localFilesFolder, filePath),
+      icon: iconName
+    });
   })
 
   // Load our app when user is authenticated.
   ipcMain.on("authenticated", async event => {
     mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
-
-    // if (env.NODE_ENV === 'development') {
-    //   return // Skip updates on development env
-    // }
-
-    // // Attempt to update the app after the user is authenticated
-    // const { licenses } = await getLicenses()
-    // if (!Object.values(licenses).some(l => Object.keys(l).length)) {
-    //   return
-    // }
-
-    // // Use first available license key that's valid for updates
-    // const [license] = Object.values(licenses).filter(l => l.meta && l.meta.valid)
-    // if (!license) {
-    //   return
-    // }
-
-    // if (lastUpdateAttemptAt != null && ((+new Date) - lastUpdateAttemptAt) < 43200000 /* every 12 hours */) {
-    //   return
-    // } else {
-    //   lastUpdateAttemptAt = +new Date
-    // }
-
-    // const { key } = license.data.attributes
-    // autoUpdater.setFeedURL(`https://dist.keygen.sh/v1/${accountId}/${productId}/update/${platform}/zip/${app.getVersion()}?key=${key}`)
-
-    // autoUpdater.on('error', err => mainWindow.webContents.send('error', err))
-    // autoUpdater.on('checking-for-update', () => mainWindow.webContents.send('log', 'checking-for-update', autoUpdater.getFeedURL()))
-    // autoUpdater.on('update-available', () => mainWindow.webContents.send('log', 'update-available', autoUpdater.getFeedURL()))
-    // autoUpdater.on('update-not-available', () => mainWindow.webContents.send('log', 'update-not-available', autoUpdater.getFeedURL()))
-    // autoUpdater.on('update-downloaded', (...args) => {
-    //   mainWindow.webContents.send('log', 'update-downloaded', autoUpdater.getFeedURL(), args)
-
-    //   const choice = dialog.showMessageBox(mainWindow, {
-    //     message: 'An update has been downloaded. Do you want to restart now to finish installing it?',
-    //     title: 'Update is ready',
-    //     type: 'question',
-    //     buttons: [
-    //       'Yes',
-    //       'No'
-    //     ]
-    //   })
-
-    //   if (choice === 0) {
-    //     autoUpdater.quitAndInstall()
-    //   }
-    // })
-
-    // autoUpdater.checkForUpdates()
   });
 
   const filter = {

@@ -4,6 +4,7 @@
 const electron=require('electron');
 const contextBridge=electron.contextBridge;
 
+
 const { ipcRenderer } = require("electron");
 
 var _sessionToken = "";
@@ -34,6 +35,30 @@ contextBridge.exposeInMainWorld(
         }
     }
 );
+
+
+contextBridge.exposeInMainWorld(
+    "file", {
+        save: (fileContent, path, open = true) => {
+            ipcRenderer.send('speichern', fileContent, path, open);
+
+            ipcRenderer.on('speichern-antwort', (event, result) => {
+                if (result.success) {
+                    console.log('Datei erfolgreich gespeichert!');
+                } else {
+                    console.error('Fehler beim Speichern der Datei:', result.error);
+                }
+            });
+        }
+    }
+);
+
+contextBridge.exposeInMainWorld('electron', {
+    startDrag: (fileName) => {
+      ipcRenderer.send('ondragstart', fileName)
+    }
+  })
+
 
 function createSession(fingerprint, userid, company) {
     _sessionToken = fingerprint;

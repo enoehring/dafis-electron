@@ -1,5 +1,5 @@
 import DataTable from 'datatables.net-dt';
-import { Modal } from 'bootstrap';
+import { Modal, Collapse } from 'bootstrap';
 import * as mdb from 'mdb-ui-kit'; // lib
 import { Input } from 'mdb-ui-kit'; // module
 import * as toastr from 'toastr';
@@ -49,6 +49,30 @@ var table = new DataTable('#file-table', {
     ],
     initComplete: function( settings, json ) {
       // JSON IN COOKIE ABLEGEN
+      $("#file-table tbody tr").attr("draggable", "true");
+
+      $("#file-table tbody tr").on("dragstart", function(event) {
+        event.preventDefault();
+        var rowData = table.row(this).data();
+
+        var id = rowData.FileDescriptorId;     
+        $.ajax({
+          url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
+          data: {
+            fileId: id,
+            fileversion: 0,
+            returnByte: true
+          },
+          success: function(data) {
+            var name = rowData.FileName + "." + rowData.Extension;
+            window.file.save(data, name, false);
+            window.electron.startDrag(name);
+          },
+          error: function(data) {
+            console.log("Error");
+          }
+        });
+      });
     }
 });
 
@@ -71,12 +95,12 @@ var TreeView = require('js-treeview');
 var tree = new TreeView($.categories, 'tree');
 
 $(".tree-leaf-content").click(function(e) {
-  console.log($(this).data("item").CategoryID);
   var search = "^" + $(this).data("item").CategoryID + "$";
   table.column(5).search(search, true, false, true).draw();
 
+  currentCategory = $(this).data("item").CategoryID;
+
   var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
-  console.log(breadcrumbString);
   $("#category-navigation").html(breadcrumbString);
 });
 
@@ -122,6 +146,7 @@ $($.categories).each(function(index, item) {
   option.value = item.CategoryID;
   option.text = item.name;
   $("#inputCategory").append(option);
+  $("#inputCategoryEdit").append(option);
 });
 
 $.loginSession = function() {
@@ -148,9 +173,13 @@ $(document).ready(function() {
 });
 
 
+let currentCategory = "";
 $("#tree .tree-leaf-content").not(".tree-expando").click(function(e) {
     $(".tree-leaf-content").removeClass("folderSelected");
     $(this).addClass("folderSelected");
+
+    console.log($(this));
+
 });
 
 var files;
@@ -351,7 +380,9 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
     success: function(data) {
       $.successToastr();
 
-      var bytes = data;
+      var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
+
+      window.file.save(data, name);
 
       $.unblockUI();
 
@@ -525,6 +556,18 @@ $("#contextBtnProperties").click(function(e) {
   });
 });
 
+document.getElementById('update_file_modal').addEventListener('show.bs.modal', () => {
+  var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
+  $("#lblDetailsFilenameEdit").text(name);
+  $("#inputDetailsDescriptionEdit").val(currentClickedRowData.VersionNotes);
+  $("#inputDetailsFilenameEdit").val(name);
+});
+
+document.getElementById('upload_file_modal').addEventListener('show.bs.modal', () => {
+    $("#inputCategory").val(currentCategory);
+    $("#inputCategory").trigger('change');
+});
+
 
 $("#checkbox").on("change", () => {
   var html = $("html");
@@ -537,6 +580,56 @@ $("#checkbox").on("change", () => {
   }
 })
 
+
+document.getElementsByClassName('odd').ondragstart = (event) => {
+  event.preventDefault()
+  window.electron.startDrag('drag-and-drop-2.md')
+}
+
+
+  document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+    
+    element.addEventListener('click', function (e) {
+
+      let nextEl = element.nextElementSibling;
+      let parentEl  = element.parentElement;	
+
+        if(nextEl) {
+            e.preventDefault();
+            let mycollapse = new Collapse(nextEl);
+            
+            if(nextEl.classList.contains('show')){
+              mycollapse.hide();
+            } else {
+                mycollapse.show();
+                // find other submenus with class=show
+                var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+                // if it exists, then close all of them
+                if(opened_submenu){
+                  new Collapse(opened_submenu);
+                }
+            }
+        }
+    }); // addEventListener
+  }) // forEach
+
+
+  $("#btnUpdateFile").click(function(e) {
+    $.ajax({
+      url: "https://dev.dafis-api.inoclad.corp/File/UpdateFile",
+      data: {
+        "fileDescriptorId": currentClickedRowData.FileDescriptorId,
+        "fileName" : $("#inputDetailsFilenameEdit").val(),
+        "notes": $("#inputDetailsDescriptionEdit").val(),
+      },
+      success: function(data) {
+
+      },
+      error: function(data) {
+
+      }
+    });
+  })
 $(".themeSelect").click(function(e) {
   $(".themeSelect").removeClass("active-theme");
   $(this).addClass("active-theme");
