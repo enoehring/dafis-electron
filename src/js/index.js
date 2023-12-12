@@ -146,6 +146,7 @@ $($.categories).each(function(index, item) {
   option.value = item.CategoryID;
   option.text = item.name;
   $("#inputCategory").append(option);
+  $("#inputCategoryEdit").append(option);
 });
 
 $.loginSession = function() {
@@ -555,6 +556,12 @@ $("#contextBtnProperties").click(function(e) {
   });
 });
 
+document.getElementById('update_file_modal').addEventListener('show.bs.modal', () => {
+  var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
+  $("#lblDetailsFilenameEdit").text(name);
+  $("#inputDetailsDescriptionEdit").val(currentClickedRowData.VersionNotes);
+  $("#inputDetailsFilenameEdit").val(name);
+});
 
 document.getElementById('upload_file_modal').addEventListener('show.bs.modal', () => {
     $("#inputCategory").val(currentCategory);
@@ -605,3 +612,21 @@ document.getElementsByClassName('odd').ondragstart = (event) => {
         }
     }); // addEventListener
   }) // forEach
+
+
+  $("#btnUpdateFile").click(function(e) {
+    $.ajax({
+      url: "https://dev.dafis-api.inoclad.corp/File/UpdateFile",
+      data: {
+        "fileDescriptorId": currentClickedRowData.FileDescriptorId,
+        "fileName" : $("#inputDetailsFilenameEdit").val(),
+        "notes": $("#inputDetailsDescriptionEdit").val(),
+      },
+      success: function(data) {
+
+      },
+      error: function(data) {
+
+      }
+    });
+  })
