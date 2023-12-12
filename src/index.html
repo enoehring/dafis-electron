@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <!-- data-bs-theme="dark" -->
-<html data-bs-theme="dark">
+<html data-bs-theme="blue">
   <head>
     <meta charset="UTF-8" />
     <title>Dafis Electron</title>
@@ -9,25 +9,37 @@
     <input hidden id="SessionToken" value="Test">
     <div id="fileManager">
       <div id="managerNavigation" class="sticky-top">
-          <div class="row bg-secondary-subtle pb-3 pt-3 rounded">
+          <div class="row bg-secondary-subtle pb-2 pt-2 rounded">
                   <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;" id="btnHome">
                     <i class="fas fa-home fa-lg" data-placement="top" data-trigger="hover" data-toggle="popover" data-content="Reset"></i>
                   </div>
-                  <span id="lblCurrentFolder" class="col-md-10 col-sm-9" data-currentFolderId="0">
-                    <nav aria-label="breadcrumb" class="mt-auto mb-auto">
+                  <span id="lblCurrentFolder" class="col-md-11 col-sm-9 pt-1 pb-1 ps-2 bg-dark rounded row" data-currentFolderId="0">
+                    <nav aria-label="breadcrumb" class="mt-auto mb-auto col-md-11">
                       <ol class="breadcrumb mt-auto mb-auto" id="category-navigation">
                         <li class="breadcrumb-item active" aria-current="page">Hauptverzeichnis</li>
                       </ol>
                     </nav>
+                    <div class="col-md-1">
+                      <ul class="navbar-nav float-end ps-3 border-start">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle btnUser" id="navbarDropdown" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                                <li><a class="dropdown-item" href="#!" data-bs-toggle="modal" data-bs-target="#settings_modal">Einstellungen</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                    </div>
+                    <!-- <li>
+                      <div class="col-md-1" style="text-align: -webkit-right;">
+                        <input type="checkbox" class="checkbox float-end" id="checkbox">
+                        <label for="checkbox" class="checkbox-label">
+                          <i class="fas fa-moon"></i>
+                          <i class="fas fa-sun"></i>
+                          <span class="ball"></span>
+                        </label>
+                      </div>
+                    </li> -->
                   </span>
-                  <div class="col-md-1" style="text-align: -webkit-right;">
-                    <input type="checkbox" class="checkbox float-end" id="checkbox">
-                    <label for="checkbox" class="checkbox-label">
-                      <i class="fas fa-moon"></i>
-                      <i class="fas fa-sun"></i>
-                      <span class="ball"></span>
-                    </label>
-                  </div>
           </div>
           <div class="row pt-2 pb-2 mb-3 border-bottom">
             <div class="col-3 btn-group" role="group" aria-label="Basic example" id="btnGroupButtons">
@@ -182,7 +194,7 @@
   <div class="modal-dialog placeholder-glow">
     <div class="modal-content pb-3">
       <div class="modal-header pb-0">
-        <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetails"><i class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span></button>
+        <button class="btn bg-primary modal-title fs-5" id="staticBackdropLabelDetails"><i class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span></button>
         <button type="button" id="btnDelete" class="btn btn-danger action_button ml-auto"><i class="fa-solid fa-trash-can"></i></button>
         <button type="button" id="btnEdit" class="btn btn-warning action_button"><i class="fa-solid fa-pen-to-square"></i></button>
         <button type="button" id="btnPreview" class="btn btn-primary action_button"><i class="fa-solid fa-eye"></i></button>
@@ -545,6 +557,70 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Settings Modal -->
+<div class="modal fade modal-xl" id="settings_modal" tabindex="-1" aria-labelledby="staticBackdropLabelSettings" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header pb-0">
+        <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelSettings"><i class="fa-solid fa-gear"></i> Einstellungen</button>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-0 ps-4 pe-4">
+        <div class="rounded" id="settings-row">
+          <div class="settingsRow row">
+            <div class="col-md-4">
+              <span>Theme</span>
+            </div>
+            <div class="col-md-8" style="display: inline-flex;">
+              <div class="rounded border border-light border-2 active-theme themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+                <div class="colorDiv col-4 rounded-start" style="background-color: white;"></div>
+                <div class="colorDiv col-4" style="background-color: #ced4da;"></div>
+                <div class="colorDiv col-4 rounded-end" style="background-color: #0d6efd;"></div>
+              </div>
+              <div class="rounded border border-light border-2 themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+                <div class="colorDiv col-4 bg-dark rounded-start" style="background-color: white;"></div>
+                <div class="colorDiv col-4" style="background-color: #1a1d20;"></div>
+                <div class="colorDiv col-4 rounded-end"  style="background-color: #0d6efd;"></div>
+              </div>
+              <div class="rounded border border-light border-2 themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+                <div class="colorDiv col-4 rounded-start" style="background-color: #151515;"></div>
+                <div class="colorDiv col-4" style="background-color: #0E0E0E;"></div>
+                <div class="colorDiv col-4 rounded-end" style="background-color: #ff0055;"></div>
+              </div>
+            </div>
+          </div>
+          <div class="settingsRow row mt-2">
+            <div class="col-md-4">
+              <span>Dateiendungen anzeigen</span>
+            </div>
+            <div class="col-md-8" style="display: inline-flex;">
+              <div class="switch__container">
+                <input id="switch-extension" class="switch switch--shadow" type="checkbox">
+                <label for="switch-extension"></label>
+              </div>
+            </div>
+          </div>
+          <div class="settingsRow row mt-2">
+            <div class="col-md-4">
+              <span>Sofortsuche</span>
+            </div>
+            <div class="col-md-8" style="display: inline-flex;">
+              <div class="switch__container">
+                <input id="switch-search" class="switch switch--shadow" type="checkbox">
+                <label for="switch-search"></label>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary">Speichern</button>
       </div>
     </div>
   </div>

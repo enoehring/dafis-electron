@@ -30,8 +30,8 @@ var table = new DataTable('#file-table', {
     keys: true,
     // processing: true,
     // serverSide: true,
-    // data: $.files,
-    ajax: "http://dev.dafis-api.inoclad.corp/File/GetAllForElectron",
+    data: $.files,
+    // ajax: "http://dev.dafis-api.inoclad.corp/File/GetAllForElectron",
     order: [[1, 'desc']],
     columns: [
         { data: 'FileDescriptorId', visible: false},
@@ -536,3 +536,8 @@ $("#checkbox").on("change", () => {
     html.attr("data-bs-theme", "dark");
   }
 })
+
+$(".themeSelect").click(function(e) {
+  $(".themeSelect").removeClass("active-theme");
+  $(this).addClass("active-theme");
+});

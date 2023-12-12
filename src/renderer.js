@@ -42,3 +42,4 @@ import './js/helper.js';
 import './js/data.js';
 import './js/index.js';
 import './js/upload.js';
+import './scss/custom.scss';
