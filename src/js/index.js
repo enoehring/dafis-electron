@@ -616,11 +616,17 @@ document.getElementsByClassName('odd').ondragstart = (event) => {
 
   $("#btnUpdateFile").click(function(e) {
     $.ajax({
-      url: "https://dev.dafis-api.inoclad.corp/File/UpdateFile",
+      url: "https://localhost:44349/File/UpdateFile",
+      type: "POST",
       data: {
         "fileDescriptorId": currentClickedRowData.FileDescriptorId,
         "fileName" : $("#inputDetailsFilenameEdit").val(),
         "notes": $("#inputDetailsDescriptionEdit").val(),
+      },
+      headers: {
+        executingUserID: loginSession.UserId,
+        SessionToken: loginSession.SessionToken,
+        Company: loginSession.Company
       },
       success: function(data) {
 
@@ -630,7 +636,12 @@ document.getElementsByClassName('odd').ondragstart = (event) => {
       }
     });
   })
+
 $(".themeSelect").click(function(e) {
   $(".themeSelect").removeClass("active-theme");
   $(this).addClass("active-theme");
+
+  var selectedTheme = $(this).data("value");
+
+  $("html").attr("data-bs-theme", selectedTheme);
 });

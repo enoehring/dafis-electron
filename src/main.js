@@ -114,7 +114,7 @@ const createWindow = () => {
 
 
   // Load the login page by default.
-  // mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+  mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
 };
 
 // This method will be called when Electron has finished

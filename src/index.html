@@ -1,6 +1,6 @@
 <!DOCTYPE html>
-<!-- data-bs-theme="dark" -->
-<html data-bs-theme="blue">
+<!-- data-bs-theme="blue" -->
+<html data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
     <title>Dafis Electron</title>
@@ -140,10 +140,10 @@
           </div>
       </div>
       <div id="managerContent" class="row" data-currentDirectory="0">
-          <div id="folderBrowser" class="col-lg-3 col-md-4 col-sm-12 ps-0">
+          <div id="folderBrowser" class="fileMan col-lg-3 col-md-4 col-sm-12 ps-0">
             <div id="tree" class="sticky-top"></div>
           </div>
-          <div id="fileBrowser" class="col-lg-9 col-md-8 col-sm-12 ">
+          <div id="fileBrowser" class="fileMan col-lg-9 col-md-8 col-sm-12 ">
             <table class="table table-striped table-hover text-wrap file-table dt-table" id="file-table" style="width: 100%;">
               <thead class="thead sticky-top" style="top: 111px;">
                   <tr>
@@ -629,11 +629,11 @@
           <div class="col-12 rounded" id="details-row">
             <div class="input-group mb-3 p-0">
               <span class="input-group-text col-sm-3" id="lblDescFilenameEdit">Dateiname</span>
-              <input readonly type="text" id="inputDetailsFilenameEdit" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilenameEdit" >
+              <input type="text" id="inputDetailsFilenameEdit" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescFilenameEdit" >
             </div>
             <div class="input-group mb-3 p-0">
               <span class="input-group-text col-sm-3" id="lblDescDescriptionEdit">Beschreibung</span>
-              <textarea readonly type="text" id="inputDetailsDescriptionEdit" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDescriptionEdit" ></textarea>
+              <textarea type="text" id="inputDetailsDescriptionEdit" class="form-control" aria-label="Sizing example input" aria-describedby="lblDescDescriptionEdit" ></textarea>
             </div>
             <div class="input-group mb-3 p-0">
               <span class="input-group-text col-sm-3" id="lblDescCategoryEdit">Kategorien</span>
@@ -648,7 +648,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
-        <button type="button" class="btn btn-primary">Speichern</button>
+        <button type="button" class="btn btn-primary" id="btnUpdateFile">Speichern</button>
       </div>
     </div>
   </div>
@@ -669,17 +669,22 @@
               <span>Theme</span>
             </div>
             <div class="col-md-8" style="display: inline-flex;">
-              <div class="rounded border border-light border-2 active-theme themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+              <div class="rounded border border-light border-2 themeSelect row col-6 col-sm-4 col-md-3 col-lg-2" data-value="light" style="height: 80px; margin: 5px;">
                 <div class="colorDiv col-4 rounded-start" style="background-color: white;"></div>
                 <div class="colorDiv col-4" style="background-color: #ced4da;"></div>
                 <div class="colorDiv col-4 rounded-end" style="background-color: #0d6efd;"></div>
               </div>
-              <div class="rounded border border-light border-2 themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+              <div class="rounded border border-light border-2 active-theme themeSelect row col-6 col-sm-4 col-md-3 col-lg-2" data-value="dark" style="height: 80px; margin: 5px;">
                 <div class="colorDiv col-4 bg-dark rounded-start" style="background-color: white;"></div>
                 <div class="colorDiv col-4" style="background-color: #1a1d20;"></div>
                 <div class="colorDiv col-4 rounded-end"  style="background-color: #0d6efd;"></div>
               </div>
-              <div class="rounded border border-light border-2 themeSelect row" style="width: 120px; height: 80px; margin: 5px;">
+              <div class="rounded border border-light border-2 themeSelect row col-6 col-sm-4 col-md-3 col-lg-2" data-value="blue" style="height: 80px; margin: 5px;">
+                <div class="colorDiv col-4 rounded-start" style="background-color: #151515;"></div>
+                <div class="colorDiv col-4" style="background-color: #0E0E0E;"></div>
+                <div class="colorDiv col-4 rounded-end" style="background-color: #ff0055;"></div>
+              </div>
+              <div class="rounded border border-light border-2 themeSelect row col-6 col-sm-4 col-md-3 col-lg-2" data-value="summer" style="height: 80px; margin: 5px;">
                 <div class="colorDiv col-4 rounded-start" style="background-color: #151515;"></div>
                 <div class="colorDiv col-4" style="background-color: #0E0E0E;"></div>
                 <div class="colorDiv col-4 rounded-end" style="background-color: #ff0055;"></div>
