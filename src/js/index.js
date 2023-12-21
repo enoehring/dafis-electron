@@ -4,6 +4,7 @@ import * as mdb from 'mdb-ui-kit'; // lib
 import { Input } from 'mdb-ui-kit'; // module
 import * as toastr from 'toastr';
 import { error } from 'jquery';
+import Swal from 'sweetalert2';
 
 require('dropify');
 window.$ = window.jQuery = require("jquery");
@@ -22,6 +23,7 @@ let LeaderLine = require("leader-line-new");
 var dropControl = $('.dropify').dropify();
 
 let loginSession;
+let enableFiltering = true;
 
 var table = new DataTable('#file-table', {
     paging: false,
@@ -95,13 +97,15 @@ var TreeView = require('js-treeview');
 var tree = new TreeView($.categories, 'tree');
 
 $(".tree-leaf-content").click(function(e) {
-  var search = "^" + $(this).data("item").CategoryID + "$";
-  table.column(5).search(search, true, false, true).draw();
-
-  currentCategory = $(this).data("item").CategoryID;
-
-  var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
-  $("#category-navigation").html(breadcrumbString);
+  if(enableFiltering) {
+    var search = "^" + $(this).data("item").CategoryID + "$";
+    table.column(5).search(search, true, false, true).draw();
+  
+    currentCategory = $(this).data("item").CategoryID;
+  
+    var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
+    $("#category-navigation").html(breadcrumbString);
+  }
 });
 
 function getCategoryBreadcrumb(categoryId) {
@@ -409,8 +413,18 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  });
 
  $("#contextBtnMoveTo").click(function(e) {
-  
-  const filePath = path.join(app.getPath('userData'), '/some.file')
+  Swal.fire({
+    title: "Wählen Sie in der Kategorieliste die gewünschte Kategorie aus, und drücken anschließend auf 'Speichern'",
+    icon: "info",
+    showCancelButton: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      enableFiltering = false;
+
+      $("#folderBrowser").css("animation", "bg 2s ease-in");
+      $("#btnMoveFileSave").css("display", "block");
+    } 
+  });
  });
 
  $("#btnHome").click(function(e) {
