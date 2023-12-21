@@ -563,8 +563,8 @@ table.dataTable tbody tr.selected th.focus, table.dataTable tbody tr.selected td
 .player {
   height: 65px;
   left: 249px;
-  background: rgb(13,110,253);
-  background: linear-gradient(90deg, rgba(13,110,253,1) 0%, rgba(0,0,0,0) 100%);
+  background: var(--bs-primary);
+  background: linear-gradient(90deg, var(--bs-primary) 0%, rgba(0,0,0,0) 100%);
 }
 .bg-primary {
   background-color: var(--bs-primary) !important;
