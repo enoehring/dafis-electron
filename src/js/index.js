@@ -24,6 +24,7 @@ var dropControl = $('.dropify').dropify();
 
 let loginSession;
 let enableFiltering = true;
+let timer = null;
 
 var table = new DataTable('#file-table', {
     paging: false,
@@ -50,10 +51,10 @@ var table = new DataTable('#file-table', {
         {data: 'CategoryId', visible: false},
     ],
     initComplete: function( settings, json ) {
-      // JSON IN COOKIE ABLEGEN
-      $("#file-table tbody tr").attr("draggable", "true");
+        // JSON IN COOKIE ABLEGEN
+        $("#file-table tbody tr").attr("draggable", "true");
 
-      $("#file-table tbody tr").on("dragstart", function(event) {
+        $("#file-table tbody tr").on("dragstart", function(event) {
         event.preventDefault();
         var rowData = table.row(this).data();
 
@@ -74,6 +75,41 @@ var table = new DataTable('#file-table', {
             console.log("Error");
           }
         });
+      });
+
+        $("#file-table tbody tr").hover(function(event) {
+
+            //clear timeout if already applied
+            if (timer) {
+
+                clearTimeout (timer);
+                timer = null;
+
+            }
+
+            //set new timeout
+            timer = setTimeout (function () {
+
+                //call wait-function and clear timeout
+                var divid = "#hoverPreview";
+                var y = event.clientY + this.scrollY;
+                $(divid).css({top: y, left: event.clientX}).show();
+
+                clearTimeout (timer);
+                timer = null;
+
+            }, 1000);
+        }, function() {
+            var divid = "#hoverPreview";
+            $(divid).hide();
+
+            //clear timeout if already applied
+            if (timer) {
+
+                clearTimeout (timer);
+                timer = null;
+
+            }
       });
     }
 });
@@ -97,15 +133,22 @@ var TreeView = require('js-treeview');
 var tree = new TreeView($.categories, 'tree');
 
 $(".tree-leaf-content").click(function(e) {
-  if(enableFiltering) {
-    var search = "^" + $(this).data("item").CategoryID + "$";
-    table.column(5).search(search, true, false, true).draw();
-  
-    currentCategory = $(this).data("item").CategoryID;
-  
-    var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
-    $("#category-navigation").html(breadcrumbString);
-  }
+    if($(e.target).hasClass("tree-expando")) {
+        return;
+    }
+
+    if(enableFiltering) {
+        $(".tree-leaf-content").removeClass("folderSelected");
+        $(this).addClass("folderSelected");
+
+        var search = "^" + $(this).data("item").CategoryID + "$";
+        table.column(5).search(search, true, false, true).draw();
+
+        currentCategory = $(this).data("item").CategoryID;
+
+        var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
+        $("#category-navigation").html(breadcrumbString);
+    }
 });
 
 function getCategoryBreadcrumb(categoryId) {
@@ -178,13 +221,6 @@ $(document).ready(function() {
 
 
 let currentCategory = "";
-$("#tree .tree-leaf-content").not(".tree-expando").click(function(e) {
-    $(".tree-leaf-content").removeClass("folderSelected");
-    $(this).addClass("folderSelected");
-
-    console.log($(this));
-
-});
 
 var files;
 
@@ -286,33 +322,6 @@ $("body").on('contextmenu', "#file-table tbody tr", function(e) {
   // table.row(this).data().id --- ID der aktuellen row
   currentClickedRowData = table.row(this).data();
   rightClick(e);
-});
-
-$("body").on('click', '#file-table tbody tr', function(e) {
-//   $("#file-table tbody tr").removeClass("selected");
-//   $(this).toggleClass('selected');
-//   var data = table.row(this).data();
-
-//   $.ajax({
-//     url: 'https://localhost:44349/File/GetFilePreview',
-//     data: { fileDescriptorId: data.FileDescriptorId },
-//     type: "POST",
-//     success: function (result) {
-
-//       if(result.success){
-//         var infos = JSON.parse(result.result);
-//         $("#file-preview").html("");
-//         $("#file-preview").append(infos.fileLocation);
-//         showDetails(data);
-//       }
-//       else {
-//         $.errorToastr("Error while previewing the File!");
-//       }
-//     },
-//     error: function(result) {
-//       $.errorToastr("Error while previewing the File!");
-//     }
-// });
 });
 
 $("body").on('dblclick', '#file-table tbody tr', function(e) {
@@ -601,31 +610,31 @@ document.getElementsByClassName('odd').ondragstart = (event) => {
 }
 
 
-  document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
+  // document.querySelectorAll('.sidebar .nav-link').forEach(function(element){
     
-    element.addEventListener('click', function (e) {
+  //   element.addEventListener('click', function (e) {
 
-      let nextEl = element.nextElementSibling;
-      let parentEl  = element.parentElement;	
+  //     let nextEl = element.nextElementSibling;
+  //     let parentEl  = element.parentElement;	
 
-        if(nextEl) {
-            e.preventDefault();
-            let mycollapse = new Collapse(nextEl);
+  //       if(nextEl) {
+  //           e.preventDefault();
+  //           let mycollapse = new Collapse(nextEl);
             
-            if(nextEl.classList.contains('show')){
-              mycollapse.hide();
-            } else {
-                mycollapse.show();
-                // find other submenus with class=show
-                var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
-                // if it exists, then close all of them
-                if(opened_submenu){
-                  new Collapse(opened_submenu);
-                }
-            }
-        }
-    }); // addEventListener
-  }) // forEach
+  //           if(nextEl.classList.contains('show')){
+  //             mycollapse.hide();
+  //           } else {
+  //               mycollapse.show();
+  //               // find other submenus with class=show
+  //               var opened_submenu = parentEl.parentElement.querySelector('.submenu.show');
+  //               // if it exists, then close all of them
+  //               if(opened_submenu){
+  //                 new Collapse(opened_submenu);
+  //               }
+  //           }
+  //       }
+  //   }); // addEventListener
+  // }) // forEach
 
 
   $("#btnUpdateFile").click(function(e) {
@@ -658,4 +667,9 @@ $(".themeSelect").click(function(e) {
   var selectedTheme = $(this).data("value");
 
   $("html").attr("data-bs-theme", selectedTheme);
+});
+
+$(".nav-link").not(".btnUser").click(function (event) {
+    $(".nav-link").removeClass("activeNav");
+    $(this).toggleClass("activeNav");
 });
