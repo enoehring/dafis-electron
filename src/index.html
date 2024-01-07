@@ -79,7 +79,7 @@
 
 <div id="fileManager">
     <div id="managerNavigation" class="sticky-top">
-        <div class="row bg-secondary-subtle pb-2 pt-2 rounded">
+        <div class="row pb-2 pt-2 rounded" id="breadCrumbBackground">
             <div class="col-md-1 col-sm-2 mt-auto mb-auto" style="display: flex;justify-content: center;" id="btnHome">
                 <i class="fas fa-home fa-lg" data-placement="top" data-trigger="hover" data-toggle="popover"
                    data-content="Reset"></i>
@@ -155,18 +155,32 @@
                     <i class="fas fa-solid fa-check"></i>
                 </button>
             </div>
-            <form class="col-8 d-flex input-group w-auto ms-auto">
-                <input
-                        type="search"
-                        class="form-control rounded"
-                        placeholder="Search"
-                        aria-label="Search"
-                        aria-describedby="search-addon"
-                />
-                <span class="input-group-text border-0" id="search-addon">
-              <i class="fas fa-search"></i>
-            </span>
-            </form>
+<!--            <form class="col-8 d-flex input-group w-auto ms-auto">-->
+<!--                <input-->
+<!--                        type="search"-->
+<!--                        class="form-control rounded"-->
+<!--                        placeholder="Search"-->
+<!--                        aria-label="Search"-->
+<!--                        aria-describedby="search-addon"-->
+<!--                />-->
+<!--                <span class="input-group-text border-0" id="search-addon">-->
+<!--              <i class="fas fa-search"></i>-->
+<!--            </span>-->
+<!--            </form>-->
+            <div class="col-2 ms-auto g-0">
+                <div class="InputContainer ms-auto">
+                    <input type="text" name="text" class="input bg-dark" id="input" placeholder="Search">
+
+                    <label for="input" class="labelforsearch">
+                        <i class="fa-solid fa-magnifying-glass"></i>
+                    </label>
+                    <div class="border"></div>
+
+                    <button class="micButton"><i class="fa-solid fa-filter"></i>
+                    </button>
+
+                </div>
+            </div>
         </div>
     </div>
     <div id="managerContent" class="row" data-currentDirectory="0">
