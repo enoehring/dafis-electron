@@ -659,3 +659,18 @@ $(".themeSelect").click(function(e) {
 
   $("html").attr("data-bs-theme", selectedTheme);
 });
+
+$("#btnMoveFile").click(function(e) {
+  console.log($(".folderSelected").data("item"));
+
+  Swal.fire({
+    title: "Sind Sie ",
+    icon: "question",
+    showCancelButton: true,
+  }).then((result) => {
+    if (result.isConfirmed) {
+      $("#folderBrowser").css("animation", "bg 2s ease-in");
+      $("#btnMoveFileSave").css("display", "block");
+    } 
+  });
+});
