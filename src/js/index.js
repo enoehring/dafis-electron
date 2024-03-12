@@ -34,7 +34,7 @@ var table = new DataTable('#file-table', {
     // processing: true,
     // serverSide: true,
     data: $.files,
-    // ajax: "http://dev.dafis-api.inoclad.corp/File/GetAllForElectron",
+    // ajax: "https://dafis-api.int.ino.group/File/GetAllForElectron",
     order: [[1, 'desc']],
     columns: [
         { data: 'FileDescriptorId', visible: false},
@@ -60,7 +60,7 @@ var table = new DataTable('#file-table', {
 
         var id = rowData.FileDescriptorId;     
         $.ajax({
-          url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
+          url: "https://dafis-api.int.ino.group/File/GetDownload",
           data: {
             fileId: id,
             fileversion: 0,
@@ -297,7 +297,7 @@ console.log(document.cookie);
   var data = table.row(row).data();
 
   $.ajax({
-    url: 'http://dev.dafis-api.inoclad.corp/File/GetFilePreview',
+    url: 'https://dafis-api.int.ino.group/File/GetFilePreview',
     data: { fileDescriptorId: data.FileDescriptorId },
     type: "POST",
     success: function (result) {
@@ -384,7 +384,7 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
   $.blockUI();
 
   $.ajax({
-    url: "http://dev.dafis-api.inoclad.corp/File/GetDownload",
+    url: "https://dafis-api.int.ino.group/File/GetDownload",
     data: {
       fileId: id,
       fileversion: 0,
@@ -409,7 +409,7 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  $("#contextBtnDownload").click(function(e) {
   var id = currentClickedRowData.FileDescriptorId;
   $.blockUI();
-  var file_path = "http://dev.dafis-api.inoclad.corp/File/GetDownload?fileId=" + id + "&fileversion=0";
+  var file_path = "https://dafis-api.int.ino.group/File/GetDownload?fileId=" + id + "&fileversion=0";
   var a = document.createElement('A');
   a.href = file_path;
   a.value = currentClickedRowData.FileName;
@@ -546,8 +546,9 @@ $("#contextBtnProperties").click(function(e) {
 //     }
 // );
 
+
   $.ajax({
-    url: "http://dev.dafis-api.inoclad.corp/File/GetDetails",
+    url: "https://dafis-api.int.ino.group/File/GetDetails",
     data: {
       fileDescriptorId: currentClickedRowData.FileDescriptorId
     },

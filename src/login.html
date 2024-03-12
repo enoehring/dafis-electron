@@ -220,14 +220,14 @@ canvas {
         // var encryptedPw = encrypt(pw);
 
         $.ajax({
-            url: "http://dev.dafis-api.inoclad.corp/DafisUser/GetCompanies",
+            url: "https://dafis-api.int.ino.group/DafisUser/GetCompanies",
             type: "POST",
             data: {
                 username: username
             },
             success: function(data) {
                 $.ajax({
-                  url: "http://dev.dafis-api.inoclad.corp/DafisUser/Login",
+                  url: "https://dafis-api.int.ino.group/DafisUser/Login",
                   type: "POST",
                   data: {
                       username: username,

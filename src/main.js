@@ -91,13 +91,13 @@ const createWindow = () => {
   });
 
   const filter = {
-    urls: ['http://dev.dafis-api.inoclad.corp/*', 'https://localhost:44349/*'] // Remote API URS for which you are getting CORS error
+    urls: ['https://dafis-api.int.ino.group/*', 'https://localhost:44349/*'] // Remote API URS for which you are getting CORS error
   }  
 
   mainWindow.webContents.session.webRequest.onBeforeSendHeaders(
     filter,
     (details, callback) => {
-      details.requestHeaders.Origin = `http://dev.dafis-api.inoclad.corp/*`
+      details.requestHeaders.Origin = `https://dafis-api.int.ino.group/*`
       callback({ requestHeaders: details.requestHeaders })
     }
   )
@@ -114,7 +114,7 @@ const createWindow = () => {
 
 
   // Load the login page by default.
-  //mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+  mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
 };
 
 // This method will be called when Electron has finished
