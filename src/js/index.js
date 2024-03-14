@@ -120,19 +120,11 @@ new $.fn.dataTable.ColReorder( table, {
 
 var TreeView = require('js-treeview');
 
-// $.ajax({
-//   url: "https://localhost:44349/Category/GetAllForElectron",
-//   success: function(data) {
-//     var tree = new TreeView(data, 'tree');
-//   },
-//   error: function(data) {
+let tree;
 
-//   }
-// })
+// tree = new TreeView($.categories, 'tree');
 
-var tree = new TreeView($.categories, 'tree');
-
-$(".tree-leaf-content").click(function(e) {
+$("body").on("click", ".tree-leaf-content", function(e) {
     if($(e.target).hasClass("tree-expando")) {
         return;
     }
@@ -141,12 +133,14 @@ $(".tree-leaf-content").click(function(e) {
         $(".tree-leaf-content").removeClass("folderSelected");
         $(this).addClass("folderSelected");
 
-        var search = "^" + $(this).data("item").CategoryID + "$";
+        console.log($(this).data("item").categoryID);
+
+        var search = "^" + $(this).data("item").categoryID + "$";
         table.column(5).search(search, true, false, true).draw();
 
-        currentCategory = $(this).data("item").CategoryID;
+        currentCategory = $(this).data("item").categoryID;
 
-        var breadcrumbString = getCategoryBreadcrumb($(this).data("item").CategoryID).join('');
+        var breadcrumbString = getCategoryBreadcrumb($(this).data("item").categoryID).join('');
         $("#category-navigation").html(breadcrumbString);
     }
 });
@@ -154,10 +148,11 @@ $(".tree-leaf-content").click(function(e) {
 function getCategoryBreadcrumb(categoryId) {
   function findCategory(currentCategory, targetId, currentPath) {
       // Füge die aktuelle Kategorie zum Pfad hinzu
-      currentPath.push(`<li class="breadcrumb-item"><a href="#">${currentCategory.CategoryName}</a></li>`);
+
+      currentPath.push(`<li class="breadcrumb-item"><a href="#">${currentCategory.categoryName}</a></li>`);
 
       // Überprüfe, ob die aktuelle Kategorie die gesuchte Kategorie ist
-      if (currentCategory.CategoryID === targetId) {
+      if (currentCategory.categoryID === targetId) {
           return currentPath; // Gibt das Array mit den Breadcrumb-Elementen zurück
       }
 
@@ -175,7 +170,7 @@ function getCategoryBreadcrumb(categoryId) {
   }
 
   // Starte die rekursive Suche mit der Wurzelkategorie
-  for (const category of $.categories) {
+  for (const category of categories) {
       const breadcrumb = findCategory(category, categoryId, []);
       if (breadcrumb) {          
           // Füge das Attribut und die Klasse zum letzten Element hinzu
@@ -188,7 +183,7 @@ function getCategoryBreadcrumb(categoryId) {
   return ['<li class="breadcrumb-item">Kategorie nicht gefunden</li>']; // Wenn die Kategorie nicht gefunden wurde, gib eine Meldung aus
 }
 
-$($.categories).each(function(index, item) {
+$(categories).each(function(index, item) {
   var option = document.createElement("option");
   option.value = item.CategoryID;
   option.text = item.name;
@@ -200,13 +195,48 @@ $.loginSession = function() {
     return loginSession;
 };
 
+let categories = [];
+
 $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
 
     (async () => {
       loginSession = await window.get.session();
 
-      $("#userNameLabel").text(loginSession.UserName);
+      $("#userNameLabel").text(loginSession.FullName);
+
+
+        $.ajax({
+            url: "https://dafis-api.int.ino.group/DafisUser/GetCompanies",
+            type: "POST",
+            data: {
+                username: loginSession.UserName
+            },
+            success: function(data) {
+                data.result.forEach(function(item) {
+                    var option = document.createElement("option");
+                    option.value = item.companyName;
+                    option.text = item.companyName;
+                    $("#inputCompany").append(option);
+                });
+            }
+        });
+
+        $.ajax({
+            url: "https://dafis-api.int.ino.group/Category/GetAllForElectron",
+            headers: {
+                UserId: loginSession.UserId,
+                SessionToken: loginSession.SessionToken,
+                Company: loginSession.Company
+            },
+            success: function(data) {
+                categories = data;
+                tree = new TreeView(data, 'tree');
+            },
+            error: function(data) {
+
+            }
+        })
     })();
 
     $('.tree-leaf-text').each(function() {
@@ -219,6 +249,11 @@ $(document).ready(function() {
         width: "100%",
         closeOnSelect: false,
       });
+});
+
+$("#btnSwitchCompany").click(function(e) {
+    var company = $("#inputCompany option:selected").val();
+
 });
 
 

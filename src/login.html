@@ -246,7 +246,7 @@ canvas {
                               url: "https://dafis-api.int.ino.group/DafisUser/GetByLoginName",
                               type: "POST",
                               data: {
-                                  username: username,
+                                  loginname: username,
                               },
                               headers: {
                                   // "company": data.result[0].companyName,
@@ -256,9 +256,9 @@ canvas {
                               success: function(result) {
                                     if(result.success) {
 
-                                        var name = result.result[0].firstName + " " + result.result[0].lastName;
+                                        var name = result.result.firstName + " " + result.result.lastName;
 
-                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, "Inoclad Engineering", name);
+                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, "Inoclad Engineering", name, username);
                                         window.api.loadscript('electron');
                                     }
                               }

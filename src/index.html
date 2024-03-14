@@ -18,7 +18,7 @@
                     <div class="col-3"><i class="fa-solid fa-2xl fa-circle-user"></i></div>
                     <div class="col-9">
                         <span style="font-size: small; color: dimgray;">Eingeloggt:</span><br>
-                        <h5 id="userNameLabel">Elias Nöhring</h5>
+                        <h5 id="userNameLabel">NO LOGIN</h5>
                     </div>
                 </div>
                 <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
@@ -60,14 +60,15 @@
                     <div class="menu-heading" style="font-size: small; color: dimgray;">Schnellsettings</div>
                     <div class="rounded mt-1 pt-2 pb-2 sideNav-menu">
                         <button class="btn btn-light"><i class="fa-solid fa-file-lines"></i></button>
-                        <button class="btn btn-dark"><i class="fa-solid fa-gear"></i></button>
+                        <button class="btn btn-dark"data-bs-toggle="modal" data-bs-target="#settings_modal"><i class="fa-solid fa-gear"></i></button>
                         <button class="btn btn-dark"><i class="fa-solid fa-sort"></i></button>
                         <button class="btn btn-dark"><i class="fa-solid fa-user"></i></button>
                         <button class="btn btn-light"><i class="fa-solid fa-lightbulb"></i></button>
                         <button class="btn btn-dark"><i class="fa-solid fa-chart-pie"></i></button>
                     </div>
 
-                    <button class="btn btn-dark mt-3 pt-2 pb-2 row g-0" id="btnSidenavUpload" style="text-align: center;">
+                    <button class="btn btn-dark mt-3 pt-2 pb-2 row g-0" id="btnSidenavUpload" data-bs-toggle="modal"
+                            data-bs-target="#upload_file_modal" style="text-align: center;">
                         <div class="col-12 mt-2 mb-3"><i class="fa-solid fa-circle-plus fa-2xl"></i></div>
                         <div class="col-12"><b>Upload New File</b></div>
                     </button>
@@ -91,14 +92,16 @@
                     <li class="breadcrumb-item active" aria-current="page">Hauptverzeichnis</li>
                   </ol>
                 </nav>
-                <div class="col-md-1">
+                <div class="col-md-1 pe-0">
                   <ul class="navbar-nav float-end ps-3 border-start">
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle btnUser" id="navbarDropdown" href="#" role="button"
                            data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-user fa-fw"></i></a>
                         <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
                             <li><a class="dropdown-item" href="#!" data-bs-toggle="modal"
-                                   data-bs-target="#settings_modal">Einstellungen</a></li>
+                                   data-bs-target="#settings_modal"><i class="fa-solid fa-gear"></i> Einstellungen</a></li>
+                            <li><a class="dropdown-item" href="#!" data-bs-toggle="modal"
+                                   data-bs-target="#company_modal"><i class="fa-solid fa-building-user"></i> Firma</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -851,6 +854,40 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" id="btnUpdateSettings"><i class="fa-solid fa-floppy-disk"></i>
                     Aktualisieren
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Company Modal -->
+<div class="modal fade modal-lg" id="company_modal" tabindex="-1" aria-labelledby="staticBackdropLabelSettings"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelCompany"><i
+                        class="fa-solid fa-gear"></i> Firma wechseln
+                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-0 ps-4 pe-4">
+                <div class="rounded" id="settings-row-company">
+                    <div class="settingsRow row g-0">
+                        <div class="col-md-4">
+                            <span>Firma</span>
+                        </div>
+                        <div class="col-md-8" style="display: inline-flex;">
+                            <select id="inputCompany" class="select2">
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="btnSwitchCompany" data-bs-dismiss="modal"><i class="fa-solid fa-floppy-disk"></i>
+                    Wechseln
                 </button>
             </div>
         </div>
