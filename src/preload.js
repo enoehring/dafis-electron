@@ -22,8 +22,8 @@ contextBridge.exposeInMainWorld(
 
 contextBridge.exposeInMainWorld(
     "create", {
-        session: (fingerprint, userid, company) => {
-            createSession(fingerprint, userid, company);
+        session: (fingerprint, userid, company, name) => {
+            createSession(fingerprint, userid, company, name);
         }
     }
 );
@@ -60,12 +60,12 @@ contextBridge.exposeInMainWorld('electron', {
   })
 
 
-function createSession(fingerprint, userid, company) {
+function createSession(fingerprint, userid, company, name) {
     _sessionToken = fingerprint;
     _userId = userid;
     _company = company;
 
-    ipcRenderer.send("setCookie", {SessionToken: _sessionToken, UserId: _userId, Company: _company});
+    ipcRenderer.send("setCookie", {SessionToken: _sessionToken, UserId: _userId, Company: _company, UserName: name});
 }
 
 async function getSession() {

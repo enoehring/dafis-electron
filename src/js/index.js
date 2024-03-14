@@ -205,6 +205,8 @@ $(document).ready(function() {
 
     (async () => {
       loginSession = await window.get.session();
+
+      $("#userNameLabel").text(loginSession.UserName);
     })();
 
     $('.tree-leaf-text').each(function() {

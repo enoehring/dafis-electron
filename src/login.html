@@ -242,8 +242,27 @@ canvas {
                           successToastr();
                           var loginData = result.result;
 
-                        window.create.session(loginData.fingerprint, loginData.dafisUserID, "Inoclad Engineering");
-                        window.api.loadscript('electron');
+                          $.ajax({
+                              url: "https://dafis-api.int.ino.group/DafisUser/GetByLoginName",
+                              type: "POST",
+                              data: {
+                                  username: username,
+                              },
+                              headers: {
+                                  // "company": data.result[0].companyName,
+                                  "company": "Inoclad Engineering",
+                                  "executingUserId": loginData.dafisUserID,
+                              },
+                              success: function(result) {
+                                    if(result.success) {
+
+                                        var name = result.result[0].firstName + " " + result.result[0].lastName;
+
+                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, "Inoclad Engineering", name);
+                                        window.api.loadscript('electron');
+                                    }
+                              }
+                          });
                       }
                       else {
                           errorToastr("Password oder Nutzername falsch");
