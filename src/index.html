@@ -353,6 +353,11 @@
                             <input readonly type="text" id="inputDetailsFilesize" class="form-control"
                                    aria-label="Sizing example input" aria-describedby="lblDescFilesize"/>
                         </div>
+                        <div class="input-group mb-3 p-0">
+                            <span class="input-group-text col-sm-3" id="lblDescFiletags">Tags</span>
+                            <label readonly type="text" id="inputDetailsFiletags" class="form-control"
+                                   aria-label="Sizing example input" aria-describedby="lblDescFiletags"></label>
+                        </div>
                         <hr>
                         <div class="input-group mb-3 p-0 mt-3">
                             <span class="input-group-text col-sm-3" id="lblDescFilename">Kommission</span>
@@ -429,9 +434,8 @@
                                 <div id="versions" class="col-sm-12 flex50 mt-1">
                                     <ul class="list-unstyled" id="file-details-version-list">
                                         <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
-                                            <div id="line" style="background-color: blue;"></div>
                                             <div class="media-body row me-4">
-                                                <div class="col-1 versionIcon">
+                                                <div class="col-1 versionIcon current">
                                                     <div class="icon-wrapper">
                                                         <i class="fa-solid fa-clock" id="end2"></i>
                                                     </div>
@@ -440,8 +444,8 @@
                                                     <div class="mt-0 mb-1"><b>Version 3</b> - Elias Nöhring <span
                                                             class="badge rounded-pill text-bg-primary ms-3">Current</span>
                                                         <span class="float-end font-italic font-weight-light">
-                                    14.11.2023 09:40 Uhr
-                                </span>
+                                                            14.11.2023 09:40 Uhr
+                                                        </span>
                                                     </div>
                                                     <p class="note-text">Viele Sachen verändert</p>
                                                     <div class="note-textarea"></div>
@@ -458,8 +462,8 @@
                                                 <div class="col-11">
                                                     <div class="mt-0 mb-1"><b>Version 2</b> - André Gansel
                                                         <span class="float-end font-italic font-weight-light">
-                                  14.11.2023 09:40 Uhr
-                              </span>
+                                                          14.11.2023 09:40 Uhr
+                                                      </span>
                                                     </div>
                                                     <p class="note-text">Änderungen am Design</p>
                                                     <div class="note-textarea"></div>
@@ -476,8 +480,8 @@
                                                 <div class="col-11">
                                                     <div class="mt-0 mb-1"><b>Version 1</b> - Andreas Brock
                                                         <span class="float-end font-italic font-weight-light">
-                                14.11.2023 09:40 Uhr
-                            </span>
+                                                            14.11.2023 09:40 Uhr
+                                                        </span>
                                                     </div>
                                                     <p class="note-text">Sehr tolle Datei</p>
                                                     <div class="note-textarea"></div>
@@ -930,7 +934,7 @@
     <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
         <div id="line" style="background-color: blue;"></div>
         <div class="media-body row me-4 placeholder-glow">
-            <div class="col-1 versionIcon">
+            <div class="col-1 versionIcon current">
                 <div class="icon-wrapper">
                     <i class="fa-solid fa-clock" id="end2"></i>
                 </div>
@@ -990,12 +994,58 @@
 </div>
 
 <div id="category-placeholder" style="display: none;">
-    <span class="badge bg-primary col-2 me-1 placeholder badgePlaceholder"></span><span
-        class="badge bg-primary col-2 placeholder badgePlaceholder"></span>
+    <span class="badge bg-primary col-2 me-1 placeholder badgePlaceholder"></span>
+    <span class="badge bg-primary col-2 placeholder badgePlaceholder"></span>
+</div>
+
+<div id="tag-placeholder" style="display: none;">
+    <span class="badge bg-primary col-1 me-1 placeholder badgePlaceholder"></span>
+    <span class="badge bg-primary col-1 me-1 placeholder badgePlaceholder"></span>
+    <span class="badge bg-primary col-1 me-1 placeholder badgePlaceholder"></span>
+    <span class="badge bg-primary col-1 placeholder badgePlaceholder"></span>
 </div>
 
 <div class="card" id="hoverPreview">
     <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 5H4V19L13.2923 9.70649C13.6828 9.31595 14.3159 9.31591 14.7065 9.70641L20 15.0104V5ZM2 3.9934C2 3.44476 2.45531 3 2.9918 3H21.0082C21.556 3 22 3.44495 22 3.9934V20.0066C22 20.5552 21.5447 21 21.0082 21H2.9918C2.44405 21 2 20.5551 2 20.0066V3.9934ZM8 11C6.89543 11 6 10.1046 6 9C6 7.89543 6.89543 7 8 7C9.10457 7 10 7.89543 10 9C10 10.1046 9.10457 11 8 11Z"></path></svg>
+</div>
+
+<div id="progress-container" class="progress-container">
+    <div class="progress-item">
+        <div class="file-info">
+            <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+            <div class="file-progress">
+                <div class="file-name">Testdatei.pdf</div>
+                <div class="progress-bar" id="90">
+                    <div class="progress-inner"></div>
+                </div>
+                <div class="progress-label">90%</div>
+            </div>
+        </div>
+    </div>
+    <div class="progress-item">
+        <div class="file-info">
+            <i class="fa-solid fa-cloud-arrow-down fa-2x"></i>
+            <div class="file-progress">
+                <div class="file-name">Testdatei2.pdf</div>
+                <div class="progress-bar" id="10">
+                    <div class="progress-inner"></div>
+                </div>
+                <div class="progress-label">10%</div>
+            </div>
+        </div>
+    </div>
+    <div class="progress-item">
+        <div class="file-info">
+            <i class="fa-solid fa-cloud-arrow-down fa-2x"></i>
+            <div class="file-progress">
+                <div class="file-name">Testdatei3.pdf</div>
+                <div class="progress-bar" id="20">
+                    <div class="progress-inner"></div>
+                </div>
+                <div class="progress-label">20%</div>
+            </div>
+        </div>
+    </div>
 </div>
 </body>
 </html>

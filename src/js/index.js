@@ -249,6 +249,39 @@ $(document).ready(function() {
         width: "100%",
         closeOnSelect: false,
       });
+
+    var progressContainer = $('#progress-container');
+
+    $(document).ajaxStart(function() {
+        progressContainer.empty().show();
+    });
+
+    $(document).ajaxComplete(function() {
+        progressContainer.hide();
+    });
+
+    $(document).ajaxSend(function(event, xhr, options) {
+        if (options.type === 'GET') {
+            var progressBar = $('<div class="progress-bar"></div>');
+
+            // Weise der Fortschrittsleiste die graue Farbe zu
+            progressBar.css('background-color', '#ccc');
+
+            // Füge die Fortschrittsleiste zum Fortschrittsitem hinzu
+            $(this).find('.progress-item:last-child .file-progress').append(progressBar);
+
+            xhr.addEventListener('progress', function(event) {
+                if (event.lengthComputable) {
+                    var percentComplete = (event.loaded / event.total) * 100;
+
+                    // Ändere die Farbe der Fortschrittsleiste zu Blau basierend auf dem Fortschritt
+                    progressBar.css('background-color', 'blue');
+                    progressBar.css('width', percentComplete + '%');
+                    $(this).find('.progress-item:last-child .progress-label').text(percentComplete.toFixed(0) + '%');
+                }
+            }.bind(this), false);
+        }
+    });
 });
 
 $("#btnSwitchCompany").click(function(e) {
@@ -565,6 +598,8 @@ $("#contextBtnProperties").click(function(e) {
 
   $("#file-details-version-list").html($("#version-placeholder").html());
   $("#inputDetailsCategory").html($("#category-placeholder").html());
+  $("#inputDetailsFiletags").html($("#tag-placeholder").html());
+
 
 // document.getElementById('file_details_modal').addEventListener('show.bs.modal', () => {
 //   var line1 = new LeaderLine(
