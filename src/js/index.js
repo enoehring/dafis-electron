@@ -23,6 +23,7 @@ let LeaderLine = require("leader-line-new");
 var dropControl = $('.dropify').dropify();
 
 let loginSession;
+let downloadPath;
 let enableFiltering = true;
 let timer = null;
 
@@ -201,7 +202,11 @@ $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
 
     (async () => {
-      loginSession = await window.get.session();
+        var cookies = await window.get.session();
+      loginSession = cookies.sessionData;
+      downloadPath = cookies.pathObj.downloadPath;
+
+      $("#defaultDownload").attr("filename", downloadPath);
 
       $("#userNameLabel").text(loginSession.FullName);
 
@@ -252,37 +257,78 @@ $(document).ready(function() {
 
     var progressContainer = $('#progress-container');
 
-    $(document).ajaxStart(function() {
-        progressContainer.empty().show();
-    });
+    // $(document).ajaxStart(function(event, xhr, options) {
+    //     progressContainer.empty().show();
+    // });
 
-    $(document).ajaxComplete(function() {
-        progressContainer.hide();
-    });
+    // $(document).ajaxComplete(function() {
+    //     progressContainer.hide();
+    // });
 
     $(document).ajaxSend(function(event, xhr, options) {
-        if (options.type === 'GET') {
+        if (options.type === 'GET' && options.url.includes("File/GetDownload")) {
+            progressContainer.show();
+
+            var progressItem = $('<div class="progress-item"></div>');
+            var fileInfo = $('<div class="file-info"><i class="fa-solid fa-cloud-arrow-down fa-2x"></i></div>');
+            var fileProgress = $('<div class="file-progress"></div>');
             var progressBar = $('<div class="progress-bar"></div>');
+            var progressLabel = $('<div class="progress-label">0%</div>');
+            var progressInner = $('<div class="progress-inner"></div>');
+            var fileName = options.url.split('/').pop(); // Hier wird der Dateiname extrahiert
 
-            // Weise der Fortschrittsleiste die graue Farbe zu
-            progressBar.css('background-color', '#ccc');
+            var name = getFileNameFromUrl(fileName);
 
-            // Füge die Fortschrittsleiste zum Fortschrittsitem hinzu
-            $(this).find('.progress-item:last-child .file-progress').append(progressBar);
+            fileProgress.append('<div class="file-name">' + name + '</div>');
+            progressBar.append(progressInner);
+            fileProgress.append(progressBar);
+            fileProgress.append(progressLabel);
 
-            xhr.addEventListener('progress', function(event) {
+
+            fileInfo.append(fileProgress);
+            progressContainer.append($('<div id="close-progress" class="close-progress">&times;</div>'));
+            progressContainer.append(progressItem);
+
+            progressItem.append(fileInfo);
+
+            // Füge die innere Fortschrittsleiste zur äußeren Fortschrittsleiste hinzu
+            $(this).find('.progress-item:last-child .progress-bar').append(progressInner);
+
+            xhr.onprogress = function(event) {
                 if (event.lengthComputable) {
                     var percentComplete = (event.loaded / event.total) * 100;
 
-                    // Ändere die Farbe der Fortschrittsleiste zu Blau basierend auf dem Fortschritt
-                    progressBar.css('background-color', 'blue');
-                    progressBar.css('width', percentComplete + '%');
+                    // Ändere die Breite der inneren Fortschrittsleiste basierend auf dem Fortschritt
+                    progressInner.css('width', percentComplete + '%');
                     $(this).find('.progress-item:last-child .progress-label').text(percentComplete.toFixed(0) + '%');
                 }
-            }.bind(this), false);
+            }.bind(this);
         }
     });
 });
+
+$("body").on("click", "#close-progress", function (e) {
+    $('#progress-container').empty().hide();
+});
+
+// Funktion zum Extrahieren des Werts des Parameters fileName aus der URL
+function getFileNameFromUrl(url) {
+    // Zerlegen Sie die URL anhand des Fragezeichens, um den Query-String zu erhalten
+    var queryString = url.split('?')[1];
+
+    // Zerlegen Sie den Query-String anhand des Ampersands, um die einzelnen Parameter zu erhalten
+    var params = queryString.split('&');
+
+    // Durchlaufen Sie die Parameter, um den Wert des fileName-Parameters zu finden
+    for (var i = 0; i < params.length; i++) {
+        var param = params[i].split('=');
+        if (param[0] === 'fileName') {
+            return decodeURIComponent(param[1]); // DecodeURIComponent, um URL-codierte Zeichen zu entschlüsseln
+        }
+    }
+    // Falls der Parameter fileName nicht gefunden wird, geben Sie null zurück oder einen anderen Standardwert
+    return null;
+}
 
 $("#btnSwitchCompany").click(function(e) {
     var company = $("#inputCompany option:selected").val();
@@ -451,13 +497,14 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
  $("#contextBtnCheckout").click(function(e) {
   var id = currentClickedRowData.FileDescriptorId;
   
-  $.blockUI();
+  //$.blockUI();
 
   $.ajax({
     url: "https://dafis-api.int.ino.group/File/GetDownload",
     data: {
       fileId: id,
       fileversion: 0,
+      fileName: currentClickedRowData.FileName + "." + currentClickedRowData.Extension,
       returnByte: true
     },
     success: function(data) {
@@ -761,4 +808,10 @@ $("#btnMoveFile").click(function(e) {
 $(".nav-link").not(".btnUser").click(function (event) {
   $(".nav-link").removeClass("activeNav");
   $(this).toggleClass("activeNav");
+});
+
+$("#defaultDownload").on("change", function (event) {
+    const selectedFolder = event.target.files[0];
+    console.log("Der ausgewählte Ordner ist: ", selectedFolder.path);
+    // Hier kannst du die Logik implementieren, um den ausgewählten Ordner als Standard-Download-Ordner festzulegen
 });

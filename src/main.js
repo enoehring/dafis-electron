@@ -15,6 +15,8 @@ if (require('electron-squirrel-startup')) {
 }
 
 let mainWindow
+const downloadPath = app.getPath('downloads');
+let pathObj = {downloadPath: downloadPath}
 
 const createWindow = () => {
   // Create the browser window.
@@ -43,7 +45,8 @@ const createWindow = () => {
   ipcMain.on('speichern', (event, dateiInhalt, dateiPfad, open = true) => {
 
     const buffer = Buffer.from(dateiInhalt, 'base64');
-    var savePath = path.join(localFilesFolder, dateiPfad);
+    //var savePath = path.join(localFilesFolder, dateiPfad);
+    var savePath = downloadPath;
 
     fs.writeFile(savePath, buffer, { encoding: 'binary' }, (err) => {
       if (err) {
@@ -61,7 +64,7 @@ const createWindow = () => {
   var sessionData = {};
 
   ipcMain.handle("getCookies", async (event) => {
-    return sessionData;
+    return {sessionData, pathObj};
   });
 
   ipcMain.on("setCookie", (event, data) => {
@@ -114,7 +117,7 @@ const createWindow = () => {
 
 
   // Load the login page by default.
-  mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+  //mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
 };
 
 // This method will be called when Electron has finished

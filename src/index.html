@@ -194,7 +194,7 @@
             <table class="table table-striped table-hover text-wrap file-table dt-table" id="file-table"
                    style="width: 100%;">
                 <thead class="thead sticky-top" style="top: 111px;">
-                <tr>
+                <tr class="g-1">
                     <th>#</th>
                     <th id="tblHeaderFilename">Filename</th>
                     <th>Description</th>
@@ -833,6 +833,14 @@
                     </div>
                     <div class="settingsRow row mt-2">
                         <div class="col-md-4">
+                            <span>Standard Downloadverzeichnis</span>
+                        </div>
+                        <div class="col-md-8" style="display: inline-flex;">
+                            <input type="file" name="text" class="form-control" id="defaultDownload" placeholder="Standard Downloadverzeichnis" directory webkitdirectory onchange="handleFolderSelection(event)">
+                        </div>
+                    </div>
+                    <div class="settingsRow row mt-2">
+                        <div class="col-md-4">
                             <span>Dateiendungen anzeigen</span>
                         </div>
                         <div class="col-md-8" style="display: inline-flex;">
@@ -1010,42 +1018,7 @@
 </div>
 
 <div id="progress-container" class="progress-container">
-    <div class="progress-item">
-        <div class="file-info">
-            <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
-            <div class="file-progress">
-                <div class="file-name">Testdatei.pdf</div>
-                <div class="progress-bar" id="90">
-                    <div class="progress-inner"></div>
-                </div>
-                <div class="progress-label">90%</div>
-            </div>
-        </div>
-    </div>
-    <div class="progress-item">
-        <div class="file-info">
-            <i class="fa-solid fa-cloud-arrow-down fa-2x"></i>
-            <div class="file-progress">
-                <div class="file-name">Testdatei2.pdf</div>
-                <div class="progress-bar" id="10">
-                    <div class="progress-inner"></div>
-                </div>
-                <div class="progress-label">10%</div>
-            </div>
-        </div>
-    </div>
-    <div class="progress-item">
-        <div class="file-info">
-            <i class="fa-solid fa-cloud-arrow-down fa-2x"></i>
-            <div class="file-progress">
-                <div class="file-name">Testdatei3.pdf</div>
-                <div class="progress-bar" id="20">
-                    <div class="progress-inner"></div>
-                </div>
-                <div class="progress-label">20%</div>
-            </div>
-        </div>
-    </div>
+
 </div>
 </body>
 </html>

@@ -1091,22 +1091,22 @@ height: 100%;
   padding: 1rem;
   padding-bottom: 6px;
   border-radius: 15px;
+  display: none;
 }
 
-.progress-container::before {
-  content: "x";
+.close-progress {
   line-height: 1.25;
   position: absolute;
   width: 25px;
   height: 25px;
   right: 0;
-  top: -5px;
+  top: -13px;
   text-align: center;
   border-radius: 50%;
   background-color: white;
+  cursor: pointer;
   color: black;
-  transform: translateX(-50%) translateY(-50%);
-  z-index: 0;
+  z-index: 1; /* Höher als der Fortschrittscontainer */
 }
 
 .progress-item {
@@ -1147,7 +1147,7 @@ height: 100%;
 .progress-bar {
   width: 100%;
   height: 10px;
-  background-color: #d9d9d9;
+  background-color: #bfbfbf;
   border-radius: 5px;
   margin-top: 5px;
 }
