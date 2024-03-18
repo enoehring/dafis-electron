@@ -3,6 +3,8 @@
   --bs-body-bg: #1a1a1a;
   --bs-tertiary-bg: #1a1a1a;
 
+  --bs-bg-opacity: 1;
+
   --bs-body-color: #EAEAEA;
   --bs-emphasis-color: #EAEAEA;
 
@@ -16,7 +18,7 @@
   --bs-btn-bg: #ff0055;
   // --bs-primary-rgb: rgba(187, 134, 252, 1);
   // --bs-link-color-rgb: rgba(187, 134, 252, 1);
-  --bs-primary-rgb: rgba(255, 0, 85, 1);
+  --bs-primary-rgb: 255, 0, 85;
   --bs-link-color-rgb: rgba(255, 0, 85, 1);
   --bs-link-color: #ff0055;
   --bs-link-hover-color: #990033;
@@ -31,8 +33,8 @@
   --bs-secondary-color: #EAEAEA;
 
   a {
-    color: var(--bs-link-color-rgb) !important;
-    text-decoration: underline;
+    color: var(--bs-emphasis-color);
+    text-decoration: none;
   }
 
   .btn-link {
@@ -158,6 +160,10 @@
 
   .fa-filter {
     color: white;
+  }
+
+  .btn-close {
+    filter: var(--bs-btn-close-white-filter);
   }
 }
 
