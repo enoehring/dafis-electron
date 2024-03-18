@@ -26,98 +26,6 @@ let loginSession;
 let enableFiltering = true;
 let timer = null;
 
-var table = new DataTable('#file-table', {
-    paging: false,
-    bInfo: false,
-    responsive: true,
-    keys: true,
-    // processing: true,
-    // serverSide: true,
-    data: $.files,
-    // ajax: "https://dafis-api.int.ino.group/File/GetAllForElectron",
-    order: [[1, 'desc']],
-    columns: [
-        { data: 'FileDescriptorId', visible: false},
-        {data: function ( row, type, val, meta ) {
-          return row["FileName"] + "." + row["Extension"];
-        }},
-        { data: 'Notes', width: "35%" },
-        { data: function ( row, type, val, meta ) {
-          var date = new Date(row["CreatedDate"]);
-          var FormattedDate = new Intl.DateTimeFormat('de').format(date) + " " + date.getHours() + ":" + date.getMinutes();
-          return FormattedDate;
-        }, width: "15%"},
-        { data: 'Creator', width: "15%" },
-        {data: 'CategoryId', visible: false},
-    ],
-    initComplete: function( settings, json ) {
-        // JSON IN COOKIE ABLEGEN
-        $("#file-table tbody tr").attr("draggable", "true");
-
-        $("#file-table tbody tr").on("dragstart", function(event) {
-        event.preventDefault();
-        var rowData = table.row(this).data();
-
-        var id = rowData.FileDescriptorId;     
-        $.ajax({
-          url: "https://dafis-api.int.ino.group/File/GetDownload",
-          data: {
-            fileId: id,
-            fileversion: 0,
-            returnByte: true
-          },
-          success: function(data) {
-            var name = rowData.FileName + "." + rowData.Extension;
-            window.file.save(data, name, false);
-            window.electron.startDrag(name);
-          },
-          error: function(data) {
-            console.log("Error");
-          }
-        });
-      });
-
-        $("#file-table tbody tr").hover(function(event) {
-
-            //clear timeout if already applied
-            if (timer) {
-
-                clearTimeout (timer);
-                timer = null;
-
-            }
-
-            //set new timeout
-            timer = setTimeout (function () {
-
-                //call wait-function and clear timeout
-                var divid = "#hoverPreview";
-                var y = event.clientY + this.scrollY;
-                $(divid).css({top: y, left: event.clientX}).show();
-
-                clearTimeout (timer);
-                timer = null;
-
-            }, 1000);
-        }, function() {
-            var divid = "#hoverPreview";
-            $(divid).hide();
-
-            //clear timeout if already applied
-            if (timer) {
-
-                clearTimeout (timer);
-                timer = null;
-
-            }
-      });
-    }
-});
-
-new $.fn.dataTable.ColReorder( table, {
-  // options
-} );
-
 var TreeView = require('js-treeview');
 
 let tree;
@@ -132,8 +40,6 @@ $("body").on("click", ".tree-leaf-content", function(e) {
     if(enableFiltering) {
         $(".tree-leaf-content").removeClass("folderSelected");
         $(this).addClass("folderSelected");
-
-        console.log($(this).data("item").categoryID);
 
         var search = "^" + $(this).data("item").categoryID + "$";
         table.column(5).search(search, true, false, true).draw();
@@ -196,6 +102,8 @@ $.loginSession = function() {
 };
 
 let categories = [];
+let fileList = [];
+let table;
 
 $(document).ready(function() {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
@@ -217,6 +125,9 @@ $(document).ready(function() {
                     var option = document.createElement("option");
                     option.value = item.companyName;
                     option.text = item.companyName;
+                    if(item.companyName == loginSession.Company) {
+                        option.selected = true;
+                    }
                     $("#inputCompany").append(option);
                 });
             }
@@ -225,9 +136,10 @@ $(document).ready(function() {
         $.ajax({
             url: "https://dafis-api.int.ino.group/Category/GetAllForElectron",
             headers: {
-                UserId: loginSession.UserId,
+                executingUserId: loginSession.UserId,
                 SessionToken: loginSession.SessionToken,
-                Company: loginSession.Company
+                Company: loginSession.Company,
+                ExecuteAs: -1,
             },
             success: function(data) {
                 categories = data;
@@ -236,7 +148,115 @@ $(document).ready(function() {
             error: function(data) {
 
             }
-        })
+        });
+
+         table = new DataTable('#file-table', {
+            paging: false,
+            bInfo: false,
+            responsive: true,
+            keys: true,
+            // processing: true,
+            // serverSide: true,
+            //data: $.files,
+            ajax: {
+                url: "https://dafis-api.int.ino.group/File/GetAllForElectron",
+                headers: {
+                  executingUserId: loginSession.UserId,
+                  SessionToken: loginSession.SessionToken,
+                  Company: loginSession.Company,
+                  ExecuteAs: -1,
+                }
+            },
+            order: [[1, 'desc']],
+            columns: [
+                { data: 'FileDescriptorId', visible: false},
+                {data: function ( row, type, val, meta ) {
+                        return row["FileName"] + "." + row["Extension"];
+                    }},
+                { data: 'Notes', width: "35%" },
+                { data: function ( row, type, val, meta ) {
+                        var date = new Date(row["CreatedDate"]);
+                        var FormattedDate = new Intl.DateTimeFormat('de').format(date) + " " + date.getHours() + ":" + date.getMinutes();
+                        return FormattedDate;
+                    }, width: "15%"},
+                { data: 'Creator', width: "15%" },
+                {data: 'CategoryId', visible: false},
+            ],
+            initComplete: function( settings, json ) {
+                // JSON IN COOKIE ABLEGEN
+                fileList = json.data;
+
+
+                $("#file-table tbody tr").attr("draggable", "true");
+
+                $("#file-table tbody tr").on("dragstart", function(event) {
+                    event.preventDefault();
+                    var rowData = table.row(this).data();
+
+                    var id = rowData.FileDescriptorId;
+                    $.ajax({
+                        url: "https://dafis-api.int.ino.group/File/GetDownload",
+                        data: {
+                            fileId: id,
+                            fileversion: 0,
+                            returnByte: true
+                        },
+                        headers: {
+                            executingUserId: loginSession.UserId,
+                            SessionToken: loginSession.SessionToken,
+                            Company: loginSession.Company
+                        },
+                        success: function(data) {
+                            var name = rowData.FileName + "." + rowData.Extension;
+                            window.file.save(data, name, false);
+                            window.electron.startDrag(name);
+                        },
+                        error: function(data) {
+                            console.log("Error");
+                        }
+                    });
+                });
+
+                $("#file-table tbody tr").hover(function(event) {
+
+                    //clear timeout if already applied
+                    if (timer) {
+
+                        clearTimeout (timer);
+                        timer = null;
+
+                    }
+
+                    //set new timeout
+                    timer = setTimeout (function () {
+
+                        //call wait-function and clear timeout
+                        var divid = "#hoverPreview";
+                        var y = event.clientY + this.scrollY;
+                        $(divid).css({top: y, left: event.clientX}).show();
+
+                        clearTimeout (timer);
+                        timer = null;
+
+                    }, 1000);
+                }, function() {
+                    var divid = "#hoverPreview";
+                    $(divid).hide();
+
+                    //clear timeout if already applied
+                    if (timer) {
+
+                        clearTimeout (timer);
+                        timer = null;
+
+                    }
+                });
+            }
+        });
+
+        new $.fn.dataTable.ColReorder( table, {
+            // options
+        } );
     })();
 
     $('.tree-leaf-text').each(function() {
@@ -254,6 +274,7 @@ $(document).ready(function() {
 $("#btnSwitchCompany").click(function(e) {
     var company = $("#inputCompany option:selected").val();
 
+    changeMandant(company);
 });
 
 
@@ -335,7 +356,14 @@ console.log(document.cookie);
 
   $.ajax({
     url: 'https://dafis-api.int.ino.group/File/GetFilePreview',
-    data: { fileDescriptorId: data.FileDescriptorId },
+    data: {
+        fileDescriptorId: data.FileDescriptorId
+    },
+      headers: {
+          executingUserId: loginSession.UserId,
+          SessionToken: loginSession.SessionToken,
+          Company: loginSession.Company
+      },
     type: "POST",
     success: function (result) {
 
@@ -427,6 +455,11 @@ $("body").on('dblclick', '#file-table tbody tr', function(e) {
       fileversion: 0,
       returnByte: true
     },
+      headers: {
+          executingUserId: loginSession.UserId,
+          SessionToken: loginSession.SessionToken,
+          Company: loginSession.Company
+      },
     success: function(data) {
       $.successToastr();
 
@@ -510,10 +543,10 @@ function upload_file_to_Api() {
       form_data.append("FileName", $("#inputFilename").val());
       form_data.append("Description", Description);
       form_data.append("Category", JSON.stringify(_categories));
-      form_data.append("Clients", $.loginSession().Company);
-      form_data.append("ExecutingUserId", $.loginSession().UserId);
-      form_data.append("SessionToken", $.loginSession().SessionToken);
-      form_data.append("Company", $.loginSession().Company);
+      form_data.append("Clients", loginSession.Company);
+      form_data.append("ExecutingUserId", loginSession.UserId);
+      form_data.append("SessionToken", loginSession.SessionToken);
+      form_data.append("Company", loginSession.Company);
       form_data.append("AlreadyExists", fileExists);
 
       // if (fileExists) {
@@ -589,11 +622,11 @@ $("#contextBtnProperties").click(function(e) {
     data: {
       fileDescriptorId: currentClickedRowData.FileDescriptorId
     },
-    headers: {
-        UserId: loginSession.UserId,
-        SessionToken: loginSession.SessionToken,
-        Company: loginSession.Company
-    },
+      headers: {
+          executingUserId: loginSession.UserId,
+          SessionToken: loginSession.SessionToken,
+          Company: loginSession.Company
+      },
     success: function(data) {
         console.log(JSON.parse(data.result));
 
@@ -727,3 +760,37 @@ $(".nav-link").not(".btnUser").click(function (event) {
   $(".nav-link").removeClass("activeNav");
   $(this).toggleClass("activeNav");
 });
+
+
+function changeMandant(newMandant) {
+    // Login the user in the new mandant to get the login session
+    $.ajax({
+        url: "https://dafis-api.int.ino.group/DafisUser/SetSession",
+        type: "POST",
+        data: {
+            username: loginSession.UserName,
+            userId: loginSession.UserId,
+            company: newMandant,
+            userAgent: navigator.userAgent,
+        },
+        headers: {
+            "company": loginSession.Company,
+        },
+        success: function(result) {
+            if(result.success) {
+                var loginData = result.result;
+
+                window.create.session(loginData.fingerprint, loginData.dafisUserID, newMandant, loginSession.FullName, loginSession.UserName);
+                window.api.loadscript('electron');
+
+                location.reload();
+            }
+            else {
+                errorToastr("Password oder Nutzername falsch");
+            }
+        },
+        error: function(data) {
+            console.log(data);
+        }
+    });
+}

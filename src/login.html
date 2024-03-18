@@ -249,8 +249,7 @@ canvas {
                                   loginname: username,
                               },
                               headers: {
-                                  // "company": data.result[0].companyName,
-                                  "company": "Inoclad Engineering",
+                                  "company": data.result[0].companyName,
                                   "executingUserId": loginData.dafisUserID,
                               },
                               success: function(result) {
@@ -258,7 +257,7 @@ canvas {
 
                                         var name = result.result.firstName + " " + result.result.lastName;
 
-                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, "Inoclad Engineering", name, username);
+                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, data.result[0].companyName, name, username);
                                         window.api.loadscript('electron');
                                     }
                               }
