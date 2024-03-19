@@ -5,7 +5,8 @@ const path = require('path');
 const url = require("url");
 const {Buffer} = require('buffer');
 const fs = require('fs');
-const https = require('node:https')
+const https = require('node:https');
+const os = require('os');
 
 const {platform, env} = process
 
@@ -16,6 +17,7 @@ if (require('electron-squirrel-startup')) {
 
 let mainWindow
 const downloadPath = app.getPath('downloads');
+const localTempPath = path.join(os.tmpdir(), "Dafis", "Elektron");
 let pathObj = {downloadPath: downloadPath}
 
 const createWindow = () => {

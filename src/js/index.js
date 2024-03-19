@@ -36,6 +36,34 @@ let tree;
 // tree = new TreeView($.categories, 'tree');
 
 $("body").on("click", ".tree-leaf-content", function (e) {
+    // $(this).closest(".tree").find(".tree-leaf").each(function (e) {
+    //     // Get the tree-leaf-text of the tree-child-leaves
+    //     $(this).find(".tree-leaf-content").each(function (e) {
+    //         //Replace the <i class="fa-solid fa-folder-open"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder"></i> item
+    //         $(this).find(".tree-leaf-text").html('<i class="fa-solid fa-folder"></i> ' + $(this).text());
+    //     });
+    // });
+    //
+    // //Replace the fa-folder-open with fa-folder on each child of the tree-leaf-text
+    // $(this).closest(".tree-leaf").find(".tree-child-leaves").each(function (e) {
+    //    // Get the tree-leaf-text of the tree-child-leaves
+    //     $(this).find(".tree-leaf-text").each(function (e) {
+    //         //Replace the <i class="fa-solid fa-folder-open"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder"></i> item
+    //         $(this).html('<i class="fa-solid fa-folder"></i> ' + $(this).text());
+    //     });
+    // });
+    //
+    // $(this).closest(".tree-child-leaves").find(".tree-leaf-content").each(function (e) {
+    //     // Get the tree-leaf-text of the tree-child-leaves
+    //     $(this).find(".tree-leaf-text").each(function (e) {
+    //         //Replace the <i class="fa-solid fa-folder-open"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder"></i> item
+    //         $(this).html('<i class="fa-solid fa-folder"></i> ' + $(this).text());
+    //     });
+    // });
+    //
+    // //Replace the <i class="fa-solid fa-folder"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder-open"></i> item
+    // $(this).find(".tree-leaf-text").html('<i class="fa-solid fa-folder-open"></i> ' + $(this).find(".tree-leaf-text").text());
+
     if ($(e.target).hasClass("tree-expando")) {
         return;
     }
@@ -81,6 +109,53 @@ function getCategoryBreadcrumb(categoryId) {
     // Starte die rekursive Suche mit der Wurzelkategorie
     for (const category of categories) {
         const breadcrumb = findCategory(category, categoryId, []);
+        if (breadcrumb) {
+            // Füge das Attribut und die Klasse zum letzten Element hinzu
+            breadcrumb[breadcrumb.length - 1] = breadcrumb[breadcrumb.length - 1].replace('<li class="breadcrumb-item"><a href="#">', '<li aria-current="page" class="active breadcrumb-item">').replace('</a>', '');
+
+            return breadcrumb; // Wenn der Pfad gefunden wurde, gib das Array mit den Breadcrumb-Elementen zurück
+        }
+    }
+
+    return ['<li class="breadcrumb-item">Kategorie nicht gefunden</li>']; // Wenn die Kategorie nicht gefunden wurde, gib eine Meldung aus
+}
+
+function setCategoryOpenFolderIcon(categoryId) {
+    function findCategoryIcon(currentCategory, targetId, currentPath) {
+        // Füge die aktuelle Kategorie zum Pfad hinzu
+
+        //Find the tree-leaf-text item that contains the categoryName as text
+        var treeLeafText = $(`.tree-leaf-text:contains('${currentCategory.categoryName}')`);
+
+        // Replace the <i class="fa-solid fa-folder"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder-open"></i> item
+        treeLeafText.html('<i class="fa-solid fa-folder-open"></i> ' + treeLeafText.text());
+
+        // Überprüfe, ob die aktuelle Kategorie die gesuchte Kategorie ist
+        if (currentCategory.categoryID === targetId) {
+            return currentPath; // Gibt das Array mit den Breadcrumb-Elementen zurück
+        }
+
+        // Durchsuche die Unterkategorien, falls vorhanden
+        if (currentCategory.children && currentCategory.children.length > 0) {
+            for (const child of currentCategory.children) {
+                const path = findCategory(child, targetId, [...currentPath]); // Kopiere den aktuellen Pfad
+                if (path) {
+                    //Find the tree-leaf-text item that contains the categoryName as text
+                    var treeLeafText = $(`.tree-leaf-text:contains('${currentCategory.categoryName}')`);
+
+                    // Replace the <i class="fa-solid fa-folder"></i> item of the tree-leaf-text with the <i class="fa-solid fa-folder-open"></i> item
+                    treeLeafText.html('<i class="fa-solid fa-folder-open"></i> ' + treeLeafText.text());
+                    return path;
+                }
+            }
+        }
+
+        return null; // Wenn die Kategorie nicht gefunden wurde, gib null zurück
+    }
+
+    // Starte die rekursive Suche mit der Wurzelkategorie
+    for (const category of categories) {
+        const breadcrumb = findCategoryIcon(category, categoryId, []);
         if (breadcrumb) {
             // Füge das Attribut und die Klasse zum letzten Element hinzu
             breadcrumb[breadcrumb.length - 1] = breadcrumb[breadcrumb.length - 1].replace('<li class="breadcrumb-item"><a href="#">', '<li aria-current="page" class="active breadcrumb-item">').replace('</a>', '');
@@ -151,6 +226,12 @@ $(document).ready(function () {
             success: function (data) {
                 categories = data;
                 tree = new TreeView(data, 'tree');
+
+                // Prepend the <i class="fa-solid fa-folder"></i> item to the text of the tree-leaf-text
+                $('.tree-leaf-text').each(function () {
+                    $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
+                    $(this).closest(".tree-leaf-content").addClass("ripple");
+                });
             },
             error: function (data) {
 
@@ -191,7 +272,7 @@ $(document).ready(function () {
                 {data: 'FileDescriptorId', visible: false},
                 {
                     data: function (row, type, val, meta) {
-                        return row["FileName"] + "." + row["Extension"];
+                        return returnIconByFileExtension(row["Extension"])+" "+row["FileName"] + "." + row["Extension"];
                     }
                 },
                 {data: 'Notes', width: "35%"},
@@ -281,6 +362,42 @@ $(document).ready(function () {
             // options
         });
     })();
+
+    function returnIconByFileExtension(extension) {
+        switch (extension) {
+            case "pdf":
+                return '<i class="fa-solid fa-lg me-2 fa-file-pdf"></i>';
+            case "doc":
+            case "docx":
+                return '<i class="fa-solid fa-lg me-2 fa-file-word"></i>';
+            case "xls":
+            case "xlsx":
+                return '<i class="fa-solid fa-lg me-2 fa-file-excel"></i>';
+            case "ppt":
+            case "pptx":
+                return '<i class="fa-solid fa-lg me-2 fa-file-powerpoint"></i>';
+            case "txt":
+                return '<i class="fa-solid fa-lg me-2 fa-file-alt"></i>';
+            case "zip":
+            case "rar":
+                return '<i class="fa-solid fa-lg me-2 fa-file-archive"></i>';
+            case "png":
+            case "jpg":
+            case "jpeg":
+            case "gif":
+                return '<i class="fa-solid fa-lg me-2 fa-file-image"></i>';
+            case "mp3":
+            case "wav":
+            case "flac":
+                return '<i class="fa-solid fa-lg me-2 fa-file-audio"></i>';
+            case "mp4":
+            case "avi":
+            case "mov":
+                return '<i class="fa-solid fa-lg me-2 fa-file-video"></i>';
+            default:
+                return '<i class="fa-solid fa-lg me-2 fa-file"></i>';
+        }
+    }
 
     $('.tree-leaf-text').each(function () {
         $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
