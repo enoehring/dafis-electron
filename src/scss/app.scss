@@ -160,6 +160,7 @@ ul {
 
   #managerNavigation {
     background-color: var(--bs-body-bg);
+    z-index: 5 !important;
   }
 
   // .btn {
@@ -1168,4 +1169,8 @@ height: 100%;
 
 .file-name {
   font-size: 11px;
+}
+
+#filterDropdown {
+  width: 600px;
 }
