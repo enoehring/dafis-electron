@@ -4,13 +4,19 @@
 const electron=require('electron');
 const contextBridge=electron.contextBridge;
 
-
 const { ipcRenderer } = require("electron");
 
 var _sessionToken = "";
 var _userId = 0;
 var _company = "";
 
+
+document.addEventListener("DOMContentLoaded", function (){
+    let button = document.getElementById("btnSortCategories");
+    button.addEventListener("click", () => {
+        button.innerHTML = "asdf";
+    })
+});
 
 contextBridge.exposeInMainWorld(
     "api", {
