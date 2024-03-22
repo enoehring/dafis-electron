@@ -203,7 +203,7 @@ canvas {
   </body>
 </html>
 <script>
-    const session = window.get.session()
+    const session = window.loginSession.get()
       if (session) {
         //window.api.loadscript('electron');
       } 
@@ -257,8 +257,11 @@ canvas {
 
                                         var name = result.result.firstName + " " + result.result.lastName;
 
-                                        window.create.session(loginData.fingerprint, loginData.dafisUserID, data.result[0].companyName, name, username);
-                                        window.api.loadscript('electron');
+                                        //window.create.session(loginData.fingerprint, loginData.dafisUserID, data.result[0].companyName, name, username);
+
+                                        window.loginSession.create(loginData.fingerprint, loginData.dafisUserID, data.result[0].companyName, name, username);
+
+                                        window.send.authenticated();
                                     }
                               }
                           });

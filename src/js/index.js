@@ -187,7 +187,7 @@ $(document).ready(function () {
     // $('.tree-leaf-text').append('<i class="fa fa-check"></i>');
 
     (async () => {
-        var cookies = await window.get.session();
+        var cookies = await window.loginSession.get();
         loginSession = cookies.sessionData;
         downloadPath = cookies.pathObj.downloadPath;
 

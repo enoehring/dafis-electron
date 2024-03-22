@@ -18,24 +18,17 @@ document.addEventListener("DOMContentLoaded", function (){
     });
 });
 
-contextBridge.exposeInMainWorld(
-    "api", {
-        loadscript: (filename) => {
-            ipcRenderer.send("authenticated")
-        }
+contextBridge.exposeInMainWorld("send", {
+    authenticated: () => {
+        ipcRenderer.send("authenticated");
+    },
+    unauthenticated: () => {
+        ipcRenderer.send("unauthenticated");
     }
-);
-
-contextBridge.exposeInMainWorld(
-    "create", {
-        session: (fingerprint, userid, company, name, username) => {
-            createSession(fingerprint, userid, company, name, username);
-        }
-    }
-);
+});
 
 // Exponieren von Funktionen an die Renderer-Seite
-contextBridge.exposeInMainWorld("session", {
+contextBridge.exposeInMainWorld("loginSession", {
     get: () => {
         // Funktion zum Abrufen von Sitzungsdaten vom Hauptprozess
         return getSession();
