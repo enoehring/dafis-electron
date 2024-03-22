@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function (){
     let button = document.getElementById("btnSortCategories");
     button.addEventListener("click", () => {
         button.innerHTML = "asdf";
-    })
+    });
 });
 
 contextBridge.exposeInMainWorld(
@@ -33,6 +33,19 @@ contextBridge.exposeInMainWorld(
         }
     }
 );
+
+// Exponieren von Funktionen an die Renderer-Seite
+contextBridge.exposeInMainWorld("session", {
+    get: () => {
+        // Funktion zum Abrufen von Sitzungsdaten vom Hauptprozess
+        return getSession();
+    },
+    create: (fingerprint, userid, company, name, username) => {
+        // Funktion zum Erstellen einer Sitzung im Hauptprozess
+        createSession(fingerprint, userid, company, name, username);
+    }
+});
+
 
 contextBridge.exposeInMainWorld(
     "get", {

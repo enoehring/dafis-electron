@@ -1178,3 +1178,29 @@ height: 100%;
 label {
   font-weight: bold;
 }
+
+input[type="text"],
+select {
+  width: 250px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.toggle-section {
+  margin-right: 20px;
+  margin-bottom: 10px;
+}
+
+.toggle-section label {
+  font-weight: normal;
+}
+
+.range-picker-section {
+  margin-bottom: 10px;
+}
+
+.range-picker-section label {
+  display: block;
+  font-weight: bold;
+}
