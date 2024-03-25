@@ -313,7 +313,7 @@ $(document).ready(function () {
                         success: function (data) {
                             var name = rowData.FileName + "." + rowData.Extension;
                             window.file.save(data, name, false);
-                            window.electron.startDrag(name);
+                            window.file.startDrag(name);
                         },
                         error: function (data) {
                             console.log("Error");
@@ -920,7 +920,7 @@ $("#checkbox").on("change", () => {
 
 document.getElementsByClassName('odd').ondragstart = (event) => {
     event.preventDefault()
-    window.electron.startDrag('drag-and-drop-2.md')
+    window.file.startDrag('drag-and-drop-2.md')
 }
 
 

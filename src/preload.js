@@ -40,14 +40,6 @@ contextBridge.exposeInMainWorld("loginSession", {
 });
 
 
-contextBridge.exposeInMainWorld(
-    "get", {
-        session: () => {
-            return getSession();
-        }
-    }
-);
-
 
 contextBridge.exposeInMainWorld(
     "file", {
@@ -61,15 +53,12 @@ contextBridge.exposeInMainWorld(
                     console.error('Fehler beim Speichern der Datei:', result.error);
                 }
             });
+        },
+        startDrag: (fileName) => {
+            ipcRenderer.send('ondragstart', fileName);
         }
     }
 );
-
-contextBridge.exposeInMainWorld('electron', {
-    startDrag: (fileName) => {
-      ipcRenderer.send('ondragstart', fileName)
-    }
-  })
 
 
 function createSession(fingerprint, userid, company, name, username) {
