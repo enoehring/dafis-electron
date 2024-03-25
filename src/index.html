@@ -184,12 +184,13 @@
 
                     <button class="micButton" data-bs-toggle="dropdown" data-bs-target="#filterDropdown"><i class="fa-solid fa-filter"></i>
                     </button>
-                    <div class="dropdown-menu" id="filterDropdown">
+                    <div class="dropdown-menu p-3" id="filterDropdown">
 
                         <div class="filter-menu row">
                             <div class="filter-section col-6">
-                                <label for="fileType">Dateityp:</label>
+                                <label class="filterLabel" for="fileType">Dateityp:</label>
                                 <select id="fileType">
+                                    <option value="-1" disabled selected>-- Auswählen --</option>
                                     <option value="pdf">PDF</option>
                                     <option value="doc">DOC</option>
                                     <option value="txt">TXT</option>
@@ -198,8 +199,9 @@
                             </div>
 
                             <div class="filter-section col-6">
-                                <label for="creator">Ersteller:</label>
+                                <label class="filterLabel" for="creator">Ersteller:</label>
                                 <select id="creator">
+                                    <option value="-1" disabled selected>-- Auswählen --</option>
                                     <option value="pdf">Elias Nöhring</option>
                                     <option value="doc">André Gansel</option>
                                     <option value="txt">Andreas Brock</option>
@@ -208,8 +210,9 @@
                             </div>
 
                             <div class="filter-section col-6">
-                                <label for="tags">Tags:</label>
+                                <label class="filterLabel" for="tags">Tags:</label>
                                 <select id="tags">
+                                    <option value="-1" disabled selected>-- Auswählen --</option>
                                     <option value="pdf">Bild</option>
                                     <option value="doc">Biergarten</option>
                                     <option value="txt">Pflanzen</option>
@@ -218,8 +221,9 @@
                             </div>
 
                             <div class="filter-section col-6">
-                                <label for="category">Kategorie:</label>
+                                <label class="filterLabel" for="category">Kategorie:</label>
                                 <select id="category">
+                                    <option value="-1" disabled selected>-- Auswählen --</option>
                                     <option value="pdf">Rechnungen</option>
                                     <option value="doc">Buchhaltung</option>
                                     <option value="txt">IT</option>
@@ -229,12 +233,12 @@
 
                             <div class="toggle-section col-6">
                                 <input type="checkbox" id="multipleVersions">
-                                <label for="multipleVersions">Mehr als 1 Version</label>
+                                <label class="filterLabel" for="multipleVersions">Mehr als 1 Version</label>
                             </div>
 
                             <div class="toggle-section col-6">
                                 <input type="checkbox" id="uploadedLastWeek">
-                                <label for="uploadedLastWeek">In der letzten Woche hochgeladen</label>
+                                <label class="filterLabel" for="uploadedLastWeek">In der letzten Woche hochgeladen</label>
                             </div>
                         </div>
                     </div>

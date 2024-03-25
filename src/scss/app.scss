@@ -1175,11 +1175,11 @@ height: 100%;
   width: 600px;
 }
 
-label {
+.filterLabel {
   font-weight: bold;
 }
 
-input[type="text"],
+input[type="text"]:not(#input),
 select {
   width: 250px;
   padding: 5px;

@@ -1,5 +1,5 @@
 const {main} = require('@popperjs/core');
-const {app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell} = require("electron");
+const {app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell, Notification} = require("electron");
 const {event} = require('jquery');
 const path = require('path');
 const url = require("url");
@@ -34,6 +34,9 @@ const createWindow = () => {
         icon: "./src/images/logo.png"
     });
 
+    app.setName('Dafis Elektron');
+    app.setAppUserModelId('Dafis Elektron');
+
     mainWindow.maximize();
 
     // and load the index.html of the app.
@@ -54,13 +57,28 @@ const createWindow = () => {
             if (err) {
                 event.reply('speichern-antwort', {success: false, error: err.message});
             } else {
+
+                if (open) {
+                    shell.openPath(savePath);
+                }
+                else {
+                    let notification = new Notification({
+                        title: 'Datei erfolgreich Heruntergeladen',
+                        body: 'Dateiname: ' + dateiPfad,
+                        icon: savePath,
+                        timeoutType: 5000
+                    });
+
+                    notification.on('click', () => {
+                        shell.openPath(savePath);
+                    })
+
+                    notification.show();
+                }
+
                 event.reply('speichern-antwort', {success: true});
             }
         });
-
-        if (open) {
-            shell.openPath(savePath);
-        }
     });
 
     var sessionData = {};
@@ -71,6 +89,14 @@ const createWindow = () => {
 
     ipcMain.on("setCookie", (event, data) => {
         sessionData = data
+
+        //Create the localTempPath folder if it doesn't exist
+        if (!fs.existsSync(localTempPath)) {
+            fs.mkdirSync(localTempPath, {recursive: true});
+        }
+
+        //Write the sessionData into a file in the localTempPath folder
+        fs.writeFileSync(path.join(localTempPath, "sessionData.json"), JSON.stringify(data));
         session.defaultSession.cookies.set(data);
     });
 
@@ -117,9 +143,21 @@ const createWindow = () => {
         }
     )
 
-
-    // Load the login page by default.
-    mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+    if (fs.existsSync(path.join(localTempPath, "sessionData.json"))) {
+        // Read the file asynchronusly
+        fs.readFile(path.join(localTempPath, "sessionData.json"), 'utf8', (err, data) => {
+            if (err) {
+                console.error(err)
+                return
+            }
+            sessionData = JSON.parse(data);
+            session.defaultSession.cookies.set(sessionData);
+        });
+    }
+    else {
+        // Load the login page by default.
+        mainWindow.loadURL(`file://${__dirname}/../../src/login.html`);
+    }
 };
 
 // This method will be called when Electron has finished

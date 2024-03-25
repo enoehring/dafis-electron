@@ -1,8 +1,8 @@
 {
-  "name": "dafis-electron",
-  "productName": "Dafis Client",
+  "name": "Dafis-Electron",
+  "productName": "Dafis Electron Client",
   "version": "1.0.0",
-  "description": "My Electron application description",
+  "description": "Client Application for DAFIS",
   "main": ".webpack/main",
   "scripts": {
     "start": "electron-forge start",

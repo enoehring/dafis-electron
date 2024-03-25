@@ -721,18 +721,47 @@ $("#contextBtnCheckout").click(function (e) {
 });
 
 $("#contextBtnDownload").click(function (e) {
-    var id = currentClickedRowData.FileDescriptorId;
-    $.blockUI();
-    var file_path = "https://dafis-api.int.ino.group/File/GetDownload?fileId=" + id + "&fileversion=0";
-    var a = document.createElement('A');
-    a.href = file_path;
-    a.value = currentClickedRowData.FileName;
-    a.setAttribute("data-title", currentClickedRowData.FileName);
-    document.body.appendChild(a);
-    a.click();
+    // var id = currentClickedRowData.FileDescriptorId;
+    // $.blockUI();
+    // var file_path = "https://dafis-api.int.ino.group/File/GetDownload?fileId=" + id + "&fileversion=0";
+    // var a = document.createElement('A');
+    // a.href = file_path;
+    // a.value = currentClickedRowData.FileName;
+    // a.setAttribute("data-title", currentClickedRowData.FileName);
+    // document.body.appendChild(a);
+    // a.click();
+    //
+    // document.body.removeChild(a);
+    // $.unblockUI();
 
-    document.body.removeChild(a);
-    $.unblockUI();
+    var id = currentClickedRowData.FileDescriptorId;
+
+    //$.blockUI();
+
+    $.ajax({
+        url: "https://dafis-api.int.ino.group/File/GetDownload",
+        data: {
+            fileId: id,
+            fileversion: 0,
+            fileName: currentClickedRowData.FileName + "." + currentClickedRowData.Extension,
+            returnByte: true
+        },
+        headers: {
+            executingUserId: loginSession.UserId,
+            SessionToken: loginSession.SessionToken,
+            Company: loginSession.Company
+        },
+        success: function (data) {
+            $.successToastr();
+
+            var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
+
+            window.file.save(data, name, false);
+        },
+        error: function (data) {
+            console.log("Error");
+        }
+    });
 });
 
 $("#contextBtnMoveTo").click(function (e) {
@@ -1023,8 +1052,7 @@ function changeMandant(newMandant) {
             if (result.success) {
                 var loginData = result.result;
 
-                window.create.session(loginData.fingerprint, loginData.dafisUserID, newMandant, loginSession.FullName, loginSession.UserName);
-                window.api.loadscript('electron');
+                window.loginSession.create(loginData.fingerprint, loginData.dafisUserID, newMandant, loginSession.FullName, loginSession.UserName);
 
                 location.reload();
             } else {
@@ -1047,4 +1075,8 @@ $("#input").on("change", function (event) {
     // Input is the search bar at the top of the page, when the user types in the search bar, the table will be filtered, after a timeout of 1 second
     var value = $(this).val();
     table.search(value).draw();
+});
+
+$(".dropdown-menu").click(function (e) {
+    e.stopPropagation();
 });
