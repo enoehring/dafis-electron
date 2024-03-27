@@ -167,14 +167,6 @@ function setCategoryOpenFolderIcon(categoryId) {
     return ['<li class="breadcrumb-item">Kategorie nicht gefunden</li>']; // Wenn die Kategorie nicht gefunden wurde, gib eine Meldung aus
 }
 
-$(categories).each(function (index, item) {
-    var option = document.createElement("option");
-    option.value = item.CategoryID;
-    option.text = item.name;
-    $("#inputCategory").append(option);
-    $("#inputCategoryEdit").append(option);
-});
-
 $.loginSession = function () {
     return loginSession;
 };
@@ -232,6 +224,39 @@ $(document).ready(function () {
                     $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
                     $(this).closest(".tree-leaf-content").addClass("ripple");
                 });
+
+
+            },
+            error: function (data) {
+
+            }
+        });
+
+        $.ajax({
+            url: "https://dafis-api.int.ino.group/Category/GetAllForUser",
+            type: "POST",
+            headers: {
+                executingUserId: loginSession.UserId,
+                SessionToken: loginSession.SessionToken,
+                Company: loginSession.Company,
+                ExecuteAs: -1,
+            },
+            success: function (data) {
+                $(data.result).each(function (index, item) {
+                    var option = document.createElement("option");
+                    option.value = item.categoryID;
+                    option.text = item.categoryName;
+
+                    // Append the option to the inputCategory select element
+                    $("#inputCategory").append(option);
+
+                    // $("#inputCategoryEdit").append(option);
+                });
+
+                $(".select2").select2({
+                    width: "100%",
+                    closeOnSelect: false,
+                });
             },
             error: function (data) {
 
@@ -268,6 +293,19 @@ $(document).ready(function () {
                 }
             },
             order: [[3, 'desc']],
+            columnDefs: [
+                {
+                    targets: '_all',
+                    render: function (data, type, row) {
+                        if (type === 'display') {
+                            return moment(data).isValid() ?
+                                moment(data).format('DD.MM.YYYY HH:mm')
+                                : data;
+                        }
+                        return data;
+                    }
+                }
+            ],
             columns: [
                 {data: 'FileDescriptorId', visible: false},
                 {
@@ -278,9 +316,7 @@ $(document).ready(function () {
                 {data: 'Notes', width: "35%"},
                 {
                     data: function (row, type, val, meta) {
-                        var date = new Date(row["CreatedDate"]);
-                        var FormattedDate = new Intl.DateTimeFormat('de', {year: "numeric", day: "2-digit", month: "2-digit"}).format(date) + " " + pad(date.getHours()) + ":" + pad(date.getMinutes());
-                        return FormattedDate;
+                        return moment(row["CreatedDate"]);
                     }, width: "15%", type: "date"
                 },
                 {data: 'Creator', width: "15%"},
@@ -402,12 +438,6 @@ $(document).ready(function () {
     $('.tree-leaf-text').each(function () {
         $(this).html('<i class="fa-solid fa-folder tree-folder-icon"></i> ' + $(this).text());
         $(this).closest(".tree-leaf-content").addClass("ripple");
-    });
-
-
-    $(".select2").select2({
-        width: "100%",
-        closeOnSelect: false,
     });
 
     var progressContainer = $('#progress-container');
@@ -686,7 +716,7 @@ $("#contextBtnCheckout").click(function (e) {
             Company: loginSession.Company
         },
         success: function (data) {
-            $.successToastr();
+            $.successToastr('Datei erfolgreich Heruntergeladen!');
 
             var name = currentClickedRowData.FileName + "." + currentClickedRowData.Extension;
 
@@ -701,7 +731,7 @@ $("#contextBtnCheckout").click(function (e) {
     });
 
     // $.ajax({
-    //     url: "https://localhost:44349/File/TestDownload?fileId=" + id + "&fileversion=0&fileName=" + currentClickedRowData.FileName + "." + currentClickedRowData.Extension + "&returnByte=true",
+    //     url: "https://dafis-api.int.ino.group/File/TestDownload?fileId=" + id + "&fileversion=0&fileName=" + currentClickedRowData.FileName + "." + currentClickedRowData.Extension + "&returnByte=true",
     //     type: "POST",
     //     data: {
     //         fileId: id,
@@ -839,9 +869,11 @@ function upload_file_to_Api() {
             processData: false,
             data: form_data,
             success: function (data) {
+                console.log(data);
                 if (data.success) {
-                    $.successToastr();
+                    $.successToastr("Datei erfolgreich hochgeladen!");
                     clearUploadForm();
+                    $("#file-table").DataTable().ajax.reload();
                 } else {
                     $.errorToastr("Fehler beim Hochladen der Datei!");
                 }
@@ -849,6 +881,7 @@ function upload_file_to_Api() {
                 fileExists = false;
             },
             error: function (data) {
+                console.log(data);
                 $.errorToastr("Fehler beim Hochladen der Datei!");
             }
         });
@@ -992,10 +1025,14 @@ $("#btnUpdateFile").click(function (e) {
         headers: {
             executingUserID: loginSession.UserId,
             SessionToken: loginSession.SessionToken,
-            Company: loginSession.Company
+            Company: loginSession.Company,
+            ExecuteAs: -1,
         },
         success: function (data) {
-
+            if (data.success) {
+                $.successToastr();
+                $("#file-table").DataTable().ajax.reload();
+            }
         },
         error: function (data) {
 
@@ -1080,3 +1117,115 @@ $("#input").on("change", function (event) {
 $(".dropdown-menu").click(function (e) {
     e.stopPropagation();
 });
+
+var themeTimeout;
+// preview the theme by changing the theme of the page as the user hovers over the theme
+$(".themeSelect").hover(function (e) {
+    var theme = $(this).data("value");
+    $("html").attr("data-bs-theme", theme);
+
+    clearTimeout(themeTimeout);
+}, function (e) {
+    themeTimeout = setTimeout(function () {
+        $("html").attr("data-bs-theme", "dark");
+    }, 0);
+});
+
+$("#tags").on("change", function() {
+    var badge = document.createElement("span");
+    badge.classList.add("badge", "bg-primary", "tagBadge", "me-1");
+    badge.innerText = $("#tags option:selected").text();
+
+    // Append an &times; to the badge to make it closable
+    var close = document.createElement("button");
+    close.classList.add("btn-close");
+    close.setAttribute("type", "button");
+    close.setAttribute("aria-label", "Close");
+    close.addEventListener("click", function() {
+        badge.remove();
+
+        console.log($("#tagBar").children().length);
+
+        // If no badges are left, hide the tag bar
+        if ($("#tagBar").children().length === 1) {
+            $("#tagBar").hide();
+        }
+    });
+    badge.appendChild(close);
+
+    $("#tagBar").append(badge);
+
+    // Show the tag bar
+    $("#tagBar").show();
+});
+
+$("#fileType").on("change", function() {
+    var badge = document.createElement("span");
+    badge.classList.add("badge", "bg-primary", "tagBadge", "me-1");
+    badge.innerText = $("#fileType option:selected").text();
+
+    // Append an &times; to the badge to make it closable
+    var close = document.createElement("button");
+    close.classList.add("btn-close");
+    close.setAttribute("type", "button");
+    close.setAttribute("aria-label", "Close");
+    close.addEventListener("click", function() {
+        badge.remove();
+
+        // If no badges are left, hide the tag bar
+        if ($("#typeBar").children().length === 1) {
+            $("#typeBar").hide();
+        }
+    });
+    badge.appendChild(close);
+
+    $("#typeBar").append(badge);
+
+    // Show the tag bar
+    $("#typeBar").show();
+});
+
+$("#contextBtnDelete").click(function (e) {
+    // Show a swal alert to confirm the deletion of the file and enter the reason for deletion
+    Swal.fire({
+        html: "<span style='font-size: 25px'>Sind Sie sicher, dass Sie die Datei '<b>" + currentClickedRowData.FileName + "." + currentClickedRowData.Extension + "</b>' löschen möchten?</span>",
+        input: "text",
+        inputLabel: "Grund für die Löschung",
+        inputPlaceholder: "Grund eingeben",
+        showCancelButton: true,
+        confirmButtonText: "Löschen",
+        cancelButtonText: "Abbrechen",
+        inputValidator: (value) => {
+            if (!value) {
+                return "Grund für die Löschung eingeben";
+            }
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // If the user confirms the deletion, delete the file
+            $.ajax({
+                url: "https://dafis-api.int.ino.group/File/SetCanRead",
+                type: "POST",
+                data: {
+                    fileDescriptorId: currentClickedRowData.FileDescriptorId,
+                    comment: result.value
+                },
+                headers: {
+                    executingUserId: loginSession.UserId,
+                    SessionToken: loginSession.SessionToken,
+                    Company: loginSession.Company,
+                    ExecuteAs: -1,
+                },
+                success: function (data) {
+                    if (data.success) {
+                        $.successToastr("Datei Erfolgreich gelöscht");
+                        $("#file-table").DataTable().ajax.reload();
+                    }
+                },
+                error: function (data) {
+                    console.log(data);
+                }
+            });
+        }
+    });
+})

@@ -1,7 +1,7 @@
 import * as toastr from 'toastr';
 
-$.successToastr = function() {
-    toastr.success('Datei erfolgreich Heruntergeladen!', {
+$.successToastr = function(text) {
+    toastr.success(text, {
       "closeButton": false,
       "debug": false,
       "newestOnTop": true,
