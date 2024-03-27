@@ -152,7 +152,7 @@
                         data-toggle="popover" data-content="Chart View">
                     <i class="fas fa-chart-bar"></i>
                 </button>
-                <button class="btn btn-link" id="btnSharedFiles" data-placement="top" data-trigger="hover"
+                <button class="btn btn-link" id="btnSharedFiles" data-bs-toggle="modal" data-bs-target="#shared_with_me" data-placement="top" data-trigger="hover"
                         data-toggle="popover" data-content="Shared">
                     <i class="fas fa-share-alt"></i>
                 </button>
@@ -1039,6 +1039,59 @@
                         class="fa-solid fa-floppy-disk"></i>
                     Wechseln
                 </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Shared With Me Modal -->
+<div class="modal fade modal-xl draggable" id="shared_with_me" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetailsShares"><i
+                        class="fa-solid fa-rectangle-list"></i> <span>Shares</span>
+                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-0 ps-4 pe-4">
+                <div class="row rounded" id="">
+                    <nav id="preview-toggle-nav-shares" class="ps-0 pe-0 mt-3">
+                        <div class="nav nav-pills nav-justified bg-primary ms-0" id="nav-tab-shares" role="tablist">
+                            <button class="nav-link active bg-primary m-0" id="nav-current-shares-tab" data-mdb-toggle="tab"
+                                    data-mdb-target="#nav-current-shares" type="button" role="tab" aria-controls="nav-current-shares"
+                                    aria-selected="true"><i class="fa-solid fa-list-ol"></i> Aktuelle Shares
+                            </button>
+                            <button class="nav-link bg-primary m-0" id="nav-future-shares-tab" data-mdb-toggle="tab"
+                                    data-mdb-target="#nav-future-shares" type="button" role="tab" aria-controls="nav-future-shares"
+                                    aria-selected="true"><i class="fa-solid fa-timeline"></i> Zukünftige Shares
+                            </button>
+                            <button class="nav-link bg-primary m-0" id="nav-old-shares-tab" data-mdb-toggle="tab"
+                                    data-mdb-target="#nav-old-shares" type="button" role="tab" aria-controls="nav-old-shares"
+                                    aria-selected="false"><i class="fa-solid fa-share-nodes"></i> Abgelaufene Shares
+                            </button>
+                        </div>
+                    </nav>
+                    <div class="tab-content ps-0 pe-0" id="nav-tabContent-shares">
+                        <div class="tab-pane fade show active" id="nav-current-shares" role="tabpanel"
+                             aria-labelledby="nav-current-shares-tab" tabindex="0">
+
+                        </div>
+                        <div class="tab-pane fade" id="nav-future-shares" role="tabpanel" aria-labelledby="nav-future-shares-tab"
+                             tabindex="0">
+
+                        </div>
+                        <div class="tab-pane fade" id="nav-old-shares" role="tabpanel" aria-labelledby="nav-old-shares-tab"
+                             tabindex="0">
+
+                        </div>
+                    </div>
+                </div>>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                        class="fa-solid fa-x"></i>Schließen</button>
             </div>
         </div>
     </div>
