@@ -82,6 +82,11 @@ $("body").on("click", ".tree-leaf-content", function (e) {
     }
 });
 
+$(".select2").select2({
+    width: "100%",
+    closeOnSelect: false,
+});
+
 function getCategoryBreadcrumb(categoryId) {
     function findCategory(currentCategory, targetId, currentPath) {
         // Füge die aktuelle Kategorie zum Pfad hinzu
@@ -251,11 +256,6 @@ $(document).ready(function () {
                     $("#inputCategory").append(option);
 
                     // $("#inputCategoryEdit").append(option);
-                });
-
-                $(".select2").select2({
-                    width: "100%",
-                    closeOnSelect: false,
                 });
             },
             error: function (data) {

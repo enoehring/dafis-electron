@@ -361,37 +361,37 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pb-0 ps-4 pe-4">
-                <div class="row rounded" id="details-row">
+                <div class="row rounded details-row" id="details-row">
                     <div class="col-7 g-0" id="fileDetails">
                         <form id="upload_file_form">
                             <div class="input-group mb-3">
-                                <span class="input-group-text col-sm-3" id="lblDescFilename">Dateiname</span>
+                                <span class="input-group-text col-sm-3" id="lblDescFilenameUpload">Dateiname</span>
                                 <input type="text" id="inputFilename" class="form-control"
-                                       aria-label="Sizing example input" aria-describedby="lblDescFilename"/>
+                                       aria-label="Sizing example input" aria-describedby="lblDescFilenameUpload"/>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text col-sm-3" id="lblDescDescription">Beschreibung</span>
+                                <span class="input-group-text col-sm-3" id="lblDescDescriptionUpload">Beschreibung</span>
                                 <textarea type="text" id="inputDescription" class="form-control"
                                           aria-label="Sizing example input"
-                                          aria-describedby="lblDescDescription"></textarea>
+                                          aria-describedby="lblDescDescriptionUpload"></textarea>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text col-sm-3" id="lblDescCategory">Kategorien</span>
-                                <div class="col-sm-9" aria-describedby="lblDescCategory">
+                                <span class="input-group-text col-sm-3" id="lblDescCategoryUpload">Kategorien</span>
+                                <div class="col-sm-9" aria-describedby="lblDescCategoryUpload">
                                     <select class="form-control select2" id="inputCategory" multiple>
 
                                     </select>
                                 </div>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text col-sm-3" id="lblDescDate">Erstelldatum</span>
+                                <span class="input-group-text col-sm-3" id="lblDescDateUpload">Erstelldatum</span>
                                 <input type="text" id="inputDate" class="form-control" aria-label="Sizing example input"
-                                       aria-describedby="lblDescDate"/>
+                                       aria-describedby="lblDescDateUpload"/>
                             </div>
                             <div class="input-group mb-3">
-                                <span class="input-group-text col-sm-3" id="lblDescCreator">Ersteller</span>
+                                <span class="input-group-text col-sm-3" id="lblDescCreatorUpload">Ersteller</span>
                                 <input type="text" id="inputCreator" class="form-control"
-                                       aria-label="Sizing example input" aria-describedby="lblDescCreator"/>
+                                       aria-label="Sizing example input" aria-describedby="lblDescCreatorUpload"/>
                             </div>
                             <hr>
                             <div class="input-group mb-3 mt-3">
@@ -445,7 +445,7 @@
     <div class="modal-dialog placeholder-glow">
         <div class="modal-content pb-3">
             <div class="modal-header pb-0">
-                <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetails"><i
+                <button class="btn btn-primary modal-title fs-5"><i
                         class="fa-solid fa-rectangle-list"></i> <span id="lblDetailsFilename">Testdokument.pdf</span>
                 </button>
                 <button type="button" id="btnDelete" class="btn btn-danger action_button ml-auto"><i
@@ -460,7 +460,7 @@
             </div>
             <div class="modal-body pb-0 ps-4 pe-4">
                 <div class="row g-2 rounded">
-                    <div class="col-8 rounded" id="details-row">
+                    <div class="col-8 rounded details-row">
                         <div class="input-group mb-3 p-0">
                             <span class="input-group-text col-sm-3" id="lblDescDescription">Beschreibung</span>
                             <textarea readonly type="text" id="inputDetailsDescription" class="form-control"
@@ -494,20 +494,20 @@
                         </div>
                         <hr>
                         <div class="input-group mb-3 p-0 mt-3">
-                            <span class="input-group-text col-sm-3" id="lblDescFilename">Kommission</span>
+                            <span class="input-group-text col-sm-3" id="lblDescCommissionDetails">Kommission</span>
                             <input readonly type="text" id="inputDetailsCommission" class="form-control"
-                                   aria-label="Sizing example input" aria-describedby="lblDescFilename"/>
+                                   aria-label="Sizing example input" aria-describedby="lblDescCommissionDetails"/>
                         </div>
                         <div class="input-group p-0">
-                            <span class="input-group-text col-sm-3" id="lblDescFilename">Jahr</span>
+                            <span class="input-group-text col-sm-3" id="lblDescYearDetails">Jahr</span>
                             <input readonly type="text" id="inputDetailsYear" class="form-control"
-                                   aria-label="Sizing example input" aria-describedby="lblDescFilename"/>
+                                   aria-label="Sizing example input" aria-describedby="lblDescYearDetails"/>
                         </div>
                     </div>
                     <div class="col-4 rounded ps-2">
                         <div id="file-notes" class="col-sm-12 flex50 mt-1">
                             <ul class="list-unstyled">
-                                <li class="media mb-3" id="note-{{ $notes->id }}">
+                                <li class="media mb-3">
                                     <div class="media-body">
                                         <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> Elias Nöhring
                                             <span class="float-end font-italic font-weight-light">
@@ -518,7 +518,7 @@
                                         <div class="note-textarea"></div>
                                     </div>
                                 </li>
-                                <li class="media mb-3" id="note-{{ $notes->id }}">
+                                <li class="media mb-3">
                                     <div class="media-body">
                                         <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> André Gansel
                                             <span class="float-end font-italic font-weight-light">
@@ -529,7 +529,7 @@
                                         <div class="note-textarea"></div>
                                     </div>
                                 </li>
-                                <li class="media mb-3" id="note-{{ $notes->id }}">
+                                <li class="media mb-3">
                                     <div class="media-body">
                                         <div class="mt-0 mb-1"><i class="fa-solid fa-message"></i> Andreas Brock
                                             <span class="float-end font-italic font-weight-light">
@@ -545,8 +545,8 @@
                     </div>
                 </div>
                 <div class="row rounded p-0">
-                    <nav id="preview-toggle-nav" class="ps-0 pe-0 mt-3">
-                        <div class="nav nav-pills nav-justified bg-primary ms-0" id="nav-tab" role="tablist">
+                    <nav class="ps-0 pe-0 mt-3">
+                        <div class="nav nav-pills nav-justified bg-primary ms-0 nav-tab" role="tablist">
                             <button class="nav-link active bg-primary m-0" id="nav-versions-tab" data-mdb-toggle="tab"
                                     data-mdb-target="#nav-versions" type="button" role="tab" aria-controls="nav-home"
                                     aria-selected="true"><i class="fa-solid fa-list-ol"></i> Versionen
@@ -561,17 +561,17 @@
                             </button>
                         </div>
                     </nav>
-                    <div class="tab-content ps-0 pe-0" id="nav-tabContent">
+                    <div class="tab-content ps-0 pe-0">
                         <div class="tab-pane fade show active" id="nav-versions" role="tabpanel"
                              aria-labelledby="nav-versions-tab" tabindex="0">
                             <div class="rounded" id="versionsRow">
                                 <div id="versions" class="col-sm-12 flex50 mt-1">
                                     <ul class="list-unstyled" id="file-details-version-list">
-                                        <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                                        <li class="media pt-2 pb-2 rounded">
                                             <div class="media-body row me-4">
                                                 <div class="col-1 versionIcon current">
                                                     <div class="icon-wrapper">
-                                                        <i class="fa-solid fa-clock" id="end2"></i>
+                                                        <i class="fa-solid fa-clock"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-11">
@@ -586,11 +586,11 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                                        <li class="media pt-2 pb-2 rounded">
                                             <div class="media-body row me-4">
                                                 <div class="col-1 versionIcon">
                                                     <div class="icon-wrapper">
-                                                        <i class="fa-regular fa-clock" id="end1"></i>
+                                                        <i class="fa-regular fa-clock"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-11">
@@ -604,11 +604,11 @@
                                                 </div>
                                             </div>
                                         </li>
-                                        <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
+                                        <li class="media pt-2 pb-2 rounded">
                                             <div class="media-body row me-4">
                                                 <div class="col-1 versionIcon">
                                                     <div class="icon-wrapper">
-                                                        <i class="fa-regular fa-clock" id="start1"></i>
+                                                        <i class="fa-regular fa-clock"></i>
                                                     </div>
                                                 </div>
                                                 <div class="col-11">
@@ -630,7 +630,7 @@
                              tabindex="0">
                             <div id="edit-history" class="col-sm-12 flex50 rounded ps-4 pe-4">
                                 <ul class="list-unstyled">
-                                    <li class="media mb-3" id="note-{{ $notes->id }}">
+                                    <li class="media mb-3">
                                         <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>Elias
                                             Nöhring</b> hat den Namen zu <span
                                                 class="edit-highlight">Testdatei.pdf</span> geändert.
@@ -639,7 +639,7 @@
                       </span>
                                         </div>
                                     </li>
-                                    <li class="media mb-3" id="note-{{ $notes->id }}">
+                                    <li class="media mb-3">
                                         <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>André
                                             Gansel</b> hat die Beschreibung zu <span class="edit-highlight">Sehr tolle Datei, die ich bearbeitet habe</span>
                                             geändert.
@@ -648,7 +648,7 @@
                       </span>
                                         </div>
                                     </li>
-                                    <li class="media" id="note-{{ $notes->id }}">
+                                    <li class="media">
                                         <div class="mt-0 mb-1 edit-text"><i class="fa-solid fa-user-pen"></i> <b>André
                                             Gansel</b> hat die Datei zur Kategorie <span class="edit-highlight">Rechnungen</span>
                                             hinzugefügt.
@@ -766,7 +766,7 @@
     <button class="btn btn-link ms-1" data-mdb-ripple-duration="0ms" id="btnClosePreview"><i
             class="fa-solid fa-circle-xmark"></i></button>
     <nav id="preview-toggle-nav" class="ps-3 pe-3">
-        <div class="nav nav-pills nav-justified bg-primary ms-0" id="nav-tab" role="tablist">
+        <div class="nav nav-pills nav-justified bg-primary ms-0 nav-tab" role="tablist">
             <button class="nav-link active bg-primary m-0" id="nav-home-tab" data-mdb-toggle="tab"
                     data-mdb-target="#nav-home" type="button" role="tab" aria-controls="nav-home" aria-selected="true">
                 <i class="fa-solid fa-magnifying-glass"></i> Vorschau
@@ -777,7 +777,7 @@
             </button>
         </div>
     </nav>
-    <div class="tab-content ps-3 pe-3" id="nav-tabContent">
+    <div class="tab-content ps-3 pe-3">
         <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
              tabindex="0">
             <div id="file-preview" class="col-12 rounded mt-2" style="height:722px;">
@@ -883,7 +883,7 @@
             </div>
             <div class="modal-body pb-0 ps-4 pe-4">
                 <div class="row g-2 rounded">
-                    <div class="col-12 rounded" id="details-row">
+                    <div class="col-12 rounded details-row">
                         <div class="input-group mb-3 p-0">
                             <span class="input-group-text col-sm-3" id="lblDescFilenameEdit">Dateiname</span>
                             <input type="text" id="inputDetailsFilenameEdit" class="form-control"
@@ -1056,16 +1056,16 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body pb-0 ps-4 pe-4">
-                <div class="row rounded" id="">
-                    <nav id="preview-toggle-nav-shares" class="ps-0 pe-0 mt-3">
+                <div class="row rounded">
+                    <nav id="preview-toggle-nav-shares" class="ps-0 pe-0">
                         <div class="nav nav-pills nav-justified bg-primary ms-0" id="nav-tab-shares" role="tablist">
                             <button class="nav-link active bg-primary m-0" id="nav-current-shares-tab" data-mdb-toggle="tab"
                                     data-mdb-target="#nav-current-shares" type="button" role="tab" aria-controls="nav-current-shares"
-                                    aria-selected="true"><i class="fa-solid fa-list-ol"></i> Aktuelle Shares
+                                    aria-selected="true"><i class="fa-solid fa-share-nodes"></i> Aktuelle Shares
                             </button>
                             <button class="nav-link bg-primary m-0" id="nav-future-shares-tab" data-mdb-toggle="tab"
                                     data-mdb-target="#nav-future-shares" type="button" role="tab" aria-controls="nav-future-shares"
-                                    aria-selected="true"><i class="fa-solid fa-timeline"></i> Zukünftige Shares
+                                    aria-selected="true"><i class="fa-solid fa-share-nodes"></i> Zukünftige Shares
                             </button>
                             <button class="nav-link bg-primary m-0" id="nav-old-shares-tab" data-mdb-toggle="tab"
                                     data-mdb-target="#nav-old-shares" type="button" role="tab" aria-controls="nav-old-shares"
@@ -1073,7 +1073,7 @@
                             </button>
                         </div>
                     </nav>
-                    <div class="tab-content ps-0 pe-0" id="nav-tabContent-shares">
+                    <div class="tab-content ps-0 pe-0">
                         <div class="tab-pane fade show active" id="nav-current-shares" role="tabpanel"
                              aria-labelledby="nav-current-shares-tab" tabindex="0">
 
@@ -1087,11 +1087,35 @@
 
                         </div>
                     </div>
-                </div>>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
-                        class="fa-solid fa-x"></i>Schließen</button>
+                        class="fa-solid fa-x"></i> Schließen</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Share Modal -->
+<div class="modal fade modal-lg draggable" id="share_modal" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header pb-0">
+                <button class="btn btn-primary modal-title fs-5" id="staticBackdropLabelDetailsShare">
+                    <i class="fa-solid fa-share-from-square"></i> <span>Teilen</span>
+                </button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body pb-0 ps-4 pe-4">
+                <div class="row rounded">
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"><i
+                        class="fa-solid fa-x"></i> Schließen</button>
             </div>
         </div>
     </div>
@@ -1100,23 +1124,46 @@
 <!-- Kontextmenü -->
 <div id="contextMenu" class="context-menu" style="display: none">
     <ul class="menu">
-        <li class="share"><a href="#" id="contextBtnShare"><i class="fa fa-share pe-1" aria-hidden="true"></i>
-            Teilen</a></li>
-        <li class="rename"><a href="#" id="contextBtnRename" data-bs-toggle="modal" data-bs-target="#update_file_modal"><i
-                class="fa fa-pencil pe-1" aria-hidden="true"></i> Editieren</a></li>
-        <li class="download"><a href="#" id="contextBtnDownload"><i class="fa fa-download pe-1" aria-hidden="true"></i>
-            Herunterladen</a></li>
-        <li class="checkout"><a href="#" id="contextBtnCheckout"><i class="fa-solid fa-file-import pe-1"
-                                                                    aria-hidden="true"></i> Auschecken</a></li>
-        <li class="details"><a href="#" id="contextBtnProperties" data-bs-toggle="modal"
-                               data-bs-target="#file_details_modal"><i class="fa fa-tasks pe-1" aria-hidden="true"></i>
-            Eigenschaften</a></li>
+        <li class="share">
+            <a href="#" id="contextBtnShare" data-bs-toggle="modal" data-bs-target="#share_modal">
+                <i class="fa fa-share pe-1" aria-hidden="true"></i> Teilen
+            </a>
+        </li>
+        <li class="rename">
+            <a href="#" id="contextBtnRename" data-bs-toggle="modal" data-bs-target="#update_file_modal">
+                <i class="fa fa-pencil pe-1" aria-hidden="true"></i> Editieren
+            </a>
+        </li>
+        <li class="download">
+            <a href="#" id="contextBtnDownload">
+                <i class="fa fa-download pe-1" aria-hidden="true"></i> Herunterladen
+            </a>
+        </li>
+        <li class="checkout">
+            <a href="#" id="contextBtnCheckout">
+                <i class="fa-solid fa-file-import pe-1" aria-hidden="true"></i> Auschecken
+            </a>
+        </li>
+        <li class="details">
+            <a href="#" id="contextBtnProperties" data-bs-toggle="modal" data-bs-target="#file_details_modal">
+                <i class="fa fa-tasks pe-1" aria-hidden="true"></i> Eigenschaften
+            </a>
+        </li>
         <hr>
-        <li class="copy"><a href="#" id="contextBtnCopyTo"><i class="fa fa-copy pe-1" aria-hidden="true"></i>
-            Kopieren</a></li>
-        <li class="paste"><a href="#" id="contextBtnMoveTo"><i class="fa fa-paste pe-1" aria-hidden="true"></i>
-            Verschieben</a></li>
-        <li class="trash"><a href="#" id="contextBtnDelete"><i class="fa fa-trash pe-1" aria-hidden="true"></i> Löschen</a>
+        <li class="copy">
+            <a href="#" id="contextBtnCopyTo">
+                <i class="fa fa-copy pe-1" aria-hidden="true"></i> Kopieren
+            </a>
+        </li>
+        <li class="paste">
+            <a href="#" id="contextBtnMoveTo">
+                <i class="fa fa-paste pe-1" aria-hidden="true"></i> Verschieben
+            </a>
+        </li>
+        <li class="trash">
+            <a href="#" id="contextBtnDelete">
+                <i class="fa fa-trash pe-1" aria-hidden="true"></i> Löschen
+            </a>
         </li>
     </ul>
 </div>
@@ -1131,11 +1178,10 @@
 <!-- Version Placeholder -->
 <div id="version-placeholder" style="display: none;">
     <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
-        <div id="line" style="background-color: blue;"></div>
         <div class="media-body row me-4 placeholder-glow">
             <div class="col-1 versionIcon current">
                 <div class="icon-wrapper">
-                    <i class="fa-solid fa-clock" id="end2"></i>
+                    <i class="fa-solid fa-clock"></i>
                 </div>
             </div>
             <div class="col-11">
@@ -1150,12 +1196,11 @@
             </div>
         </div>
     </li>
-    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
-        <div id="line" style="background-color: blue;"></div>
+    <li class="media pt-2 pb-2 rounded">
         <div class="media-body row me-4 placeholder-glow">
             <div class="col-1 versionIcon">
                 <div class="icon-wrapper">
-                    <i class="fa-solid fa-clock" id="end2"></i>
+                    <i class="fa-solid fa-clock"></i>
                 </div>
             </div>
             <div class="col-11">
@@ -1170,12 +1215,11 @@
             </div>
         </div>
     </li>
-    <li class="media pt-2 pb-2 rounded" id="note-{{ $notes->id }}">
-        <div id="line" style="background-color: blue;"></div>
+    <li class="media pt-2 pb-2 rounded">
         <div class="media-body row me-4 placeholder-glow">
             <div class="col-1 versionIcon">
                 <div class="icon-wrapper">
-                    <i class="fa-solid fa-clock" id="end2"></i>
+                    <i class="fa-solid fa-clock"></i>
                 </div>
             </div>
             <div class="col-11">

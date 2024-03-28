@@ -1,5 +1,5 @@
 const {main} = require('@popperjs/core');
-const {app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell, Notification} = require("electron");
+const {app, BrowserWindow, autoUpdater, ipcMain, dialog, session, shell, Notification, clipboard} = require("electron");
 const {event} = require('jquery');
 const path = require('path');
 const url = require("url");
@@ -57,7 +57,6 @@ const createWindow = () => {
             if (err) {
                 event.reply('speichern-antwort', {success: false, error: err.message});
             } else {
-
                 if (open) {
                     shell.openPath(savePath);
                 }
@@ -109,9 +108,8 @@ const createWindow = () => {
     const iconName = path.join(localFilesFolder, 'dnd.png')
 
     ipcMain.on('ondragstart', (event, filePath) => {
-
         event.sender.startDrag({
-            file: path.join(localFilesFolder, filePath),
+            file: path.join(downloadPath, filePath),
             icon: iconName
         });
     })
